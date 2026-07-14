@@ -9,8 +9,21 @@
     --primary: #2563eb;
     --primary-dark: #1e40af;
     --bg: #f8fafc;
+    --surface: #ffffff;
     --text: #1e293b;
     --muted: #64748b;
+    --border: #e2e8f0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary: #60a5fa;
+      --primary-dark: #93c5fd;
+      --bg: #0f172a;
+      --surface: #1a2436;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d3b52;
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -19,26 +32,65 @@
     background: var(--bg);
     line-height: 1.6;
   }
-  header {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: #fff;
-    padding: 100px 24px;
-    text-align: center;
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 88px 24px 64px;
   }
-  header h1 {
-    font-size: 3rem;
-    letter-spacing: 0.05em;
+  .hero-copy .badge {
+    display: inline-block;
+    background: #eff6ff;
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
     margin-bottom: 16px;
   }
-  header p {
-    font-size: 1.25rem;
-    opacity: 0.9;
+  @media (prefers-color-scheme: dark) {
+    .hero-copy .badge { background: #1e3a5f; }
   }
+  .hero-copy h1 {
+    font-size: 2.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .hero-copy p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 42ch;
+    margin-bottom: 28px;
+  }
+  .hero-copy a.cta {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .hero-copy a.cta:hover { background: var(--primary-dark); }
+  .hero-visual img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
   nav {
     display: flex;
     justify-content: center;
     gap: 32px;
-    background: #fff;
+    background: var(--surface);
     padding: 16px;
     position: sticky;
     top: 0;
@@ -53,7 +105,7 @@
   }
   nav a:hover { color: var(--primary); }
 
-  main { max-width: 960px; margin: 0 auto; padding: 64px 24px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 64px 24px; }
   section { margin-bottom: 96px; }
   section h2 {
     font-size: 2rem;
@@ -62,18 +114,36 @@
     border-left: 6px solid var(--primary);
     padding-left: 16px;
   }
-  section p { color: var(--muted); font-size: 1.05rem; margin-bottom: 16px; }
+  section > p { color: var(--muted); font-size: 1.05rem; margin-bottom: 16px; max-width: 65ch; }
 
-  .cards {
+  .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: auto auto;
     gap: 24px;
     margin-top: 32px;
   }
-  .card {
-    background: #fff;
+  .features-grid .feature {
+    grid-row: span 2;
     border-radius: 12px;
-    padding: 28px;
+    padding: 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 260px;
+    background-image: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%),
+                       url('https://picsum.photos/seed/skala-cloud/700/700');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+  }
+  .features-grid .feature h3 { font-size: 1.4rem; margin-bottom: 8px; }
+  .features-grid .feature p { color: rgba(255,255,255,0.88); font-size: 0.95rem; margin-bottom: 0; }
+  .card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     transition: transform 0.2s, box-shadow 0.2s;
   }
@@ -83,10 +153,10 @@
   }
   .card h3 {
     color: var(--primary);
-    margin-bottom: 12px;
-    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
   }
-  .card p { font-size: 0.95rem; margin-bottom: 0; }
+  .card p { font-size: 0.92rem; color: var(--muted); margin-bottom: 0; }
 
   .timeline {
     border-left: 3px solid var(--primary);
@@ -94,29 +164,45 @@
   }
   .timeline-item { margin-bottom: 24px; }
   .timeline-item .date { color: var(--primary); font-weight: 700; }
+  .timeline-item p { color: var(--muted); }
 
   footer {
     text-align: center;
     padding: 32px;
     color: var(--muted);
     font-size: 0.9rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 56px 24px 40px; }
+    .hero-visual { order: -1; }
+    .features-grid { grid-template-columns: 1fr; }
+    .features-grid .feature { grid-row: auto; min-height: 220px; }
   }
 </style>
 </head>
 <body>
-
-<header>
-  <h1>SKALA</h1>
-  <p>Samsung SDS Cloud Native / AI 인재 양성 과정</p>
-</header>
 
 <nav>
   <a href="#about">소개</a>
   <a href="#features">특징</a>
   <a href="#curriculum">커리큘럼</a>
   <a href="#contact">문의</a>
+  <a href="newsletter.html">뉴스레터</a>
 </nav>
+
+<div class="hero">
+  <div class="hero-copy">
+    <span class="badge">Samsung SDS 인재 양성</span>
+    <h1>클라우드 네이티브와 AI, 실무로 배웁니다</h1>
+    <p>SKALA는 프로젝트 기반 학습으로 현업 투입 가능한 개발 역량을 키우는 교육 과정입니다.</p>
+    <a class="cta" href="#about">더 알아보기</a>
+  </div>
+  <div class="hero-visual">
+    <img src="https://picsum.photos/seed/skala-hero/700/640" alt="SKALA 교육 현장 사진">
+  </div>
+</div>
 
 <main>
   <section id="about">
@@ -135,8 +221,8 @@
 
   <section id="features">
     <h2>프로그램 특징</h2>
-    <div class="cards">
-      <div class="card">
+    <div class="features-grid">
+      <div class="feature">
         <h3>클라우드 네이티브</h3>
         <p>컨테이너, 쿠버네티스, MSA 등 클라우드 네이티브 기술 스택을 심도 있게 학습합니다.</p>
       </div>
@@ -160,15 +246,15 @@
     <div class="timeline">
       <div class="timeline-item">
         <div class="date">1단계</div>
-        <p>기초 역량 강화 — 프로그래밍, 자료구조, 클라우드 기초</p>
+        <p>기초 역량 강화: 프로그래밍, 자료구조, 클라우드 기초</p>
       </div>
       <div class="timeline-item">
         <div class="date">2단계</div>
-        <p>심화 기술 학습 — 클라우드 네이티브, AI/LLM 응용</p>
+        <p>심화 기술 학습: 클라우드 네이티브, AI/LLM 응용</p>
       </div>
       <div class="timeline-item">
         <div class="date">3단계</div>
-        <p>팀 프로젝트 — 실전형 서비스 기획 및 개발</p>
+        <p>팀 프로젝트: 실전형 서비스 기획 및 개발</p>
       </div>
       <div class="timeline-item">
         <div class="date">4단계</div>
