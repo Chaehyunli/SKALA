@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKALA 뉴스레터</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary: #60a5fa;
+      --primary-dark: #93c5fd;
+      --bg: #0f172a;
+      --surface: #1a2436;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d3b52;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 88px 24px 64px;
+  }
+  .hero-copy .badge {
+    display: inline-block;
+    background: #eff6ff;
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .hero-copy .badge { background: #1e3a5f; }
+  }
+  .hero-copy h1 {
+    font-size: 2.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .hero-copy p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 42ch;
+    margin-bottom: 28px;
+  }
+  .hero-copy a.cta {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .hero-copy a.cta:hover { background: var(--primary-dark); }
+  .hero-visual img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    background: var(--surface);
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    z-index: 10;
+  }
+  nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--primary); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 64px 24px; }
+  section { margin-bottom: 96px; }
+  section h2 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    color: var(--primary-dark);
+    border-left: 6px solid var(--primary);
+    padding-left: 16px;
+  }
+  section > p { color: var(--muted); font-size: 1.05rem; margin-bottom: 16px; max-width: 65ch; }
+
+  .issue-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .issue-grid .feature {
+    grid-row: span 2;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 260px;
+    background-image: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%),
+                       url('https://picsum.photos/seed/skala-kubernetes/700/700');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+  }
+  .issue-grid .feature h3 { font-size: 1.4rem; margin-bottom: 8px; }
+  .issue-grid .feature p { color: rgba(255,255,255,0.88); font-size: 0.95rem; margin-bottom: 0; }
+  .card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  .card h3 {
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  .card p { font-size: 0.92rem; color: var(--muted); margin-bottom: 0; }
+
+  .timeline {
+    border-left: 3px solid var(--primary);
+    padding-left: 24px;
+  }
+  .timeline-item { margin-bottom: 24px; }
+  .timeline-item .date { color: var(--primary); font-weight: 700; }
+  .timeline-item p { color: var(--muted); }
+  .timeline-item .who { display: block; margin-top: 4px; font-size: 0.9rem; color: var(--muted); }
+
+  .subscribe {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .subscribe form {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .subscribe input[type="email"] {
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    min-width: 260px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .subscribe button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .subscribe button:hover { background: var(--primary-dark); }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 56px 24px 40px; }
+    .hero-visual { order: -1; }
+    .issue-grid { grid-template-columns: 1fr; }
+    .issue-grid .feature { grid-row: auto; min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">소개</a>
+  <a href="#issue">이번 호</a>
+  <a href="#stories">교육생 이야기</a>
+  <a href="#subscribe">구독하기</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-copy">
+    <span class="badge">2026년 7월호</span>
+    <h1>SKALA의 새로운 소식을 매달 전해드립니다</h1>
+    <p>커리큘럼 업데이트, 교육생 프로젝트 이야기, 현업 멘토링 후기를 한 곳에서 확인하세요.</p>
+    <a class="cta" href="#subscribe">지금 구독하기</a>
+  </div>
+  <div class="hero-visual">
+    <img src="https://picsum.photos/seed/skala-newsletter/700/640" alt="SKALA 교육 현장 사진">
+  </div>
+</div>
+
+<main>
+  <section id="issue">
+    <h2>이번 호 소식</h2>
+    <p>
+      매월 프로그램의 새로운 소식, 커리큘럼 업데이트, 그리고 교육생들의
+      생생한 프로젝트 경험을 전해드립니다.
+    </p>
+    <div class="issue-grid">
+      <div class="feature">
+        <h3>신규 커리큘럼 안내</h3>
+        <p>클라우드 네이티브 심화 과정에 쿠버네티스 운영 실습 모듈이 추가되었습니다.</p>
+      </div>
+      <div class="card">
+        <h3>생성형 AI 워크숍</h3>
+        <p>LLM 기반 서비스 개발을 주제로 한 특별 워크숍이 진행되었습니다.</p>
+      </div>
+      <div class="card">
+        <h3>팀 프로젝트 발표회</h3>
+        <p>3기 교육생들의 실전 프로젝트 결과 발표회가 성황리에 마무리되었습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="stories">
+    <h2>교육생 이야기</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="date">인터뷰</div>
+        <p>"처음엔 낯설었던 클라우드 네이티브 기술이 이제는 익숙한 도구가 되었어요."</p>
+        <span class="who">3기 수료생</span>
+      </div>
+      <div class="timeline-item">
+        <div class="date">현장 스케치</div>
+        <p>실전 프로젝트 기간 동안 팀원들과 밤샘 개발했던 순간들을 담은 사진과 후기를 공유합니다.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="date">멘토 한마디</div>
+        <p>"꾸준한 실습과 피드백이 실력 향상의 핵심입니다."</p>
+        <span class="who">현업 멘토</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="subscribe">
+    <h2>뉴스레터 구독하기</h2>
+    <div class="subscribe">
+      <p>매월 새로운 SKALA 소식을 이메일로 받아보세요.</p>
+      <form onsubmit="return false;">
+        <input type="email" placeholder="이메일 주소를 입력하세요" required>
+        <button type="submit">구독하기</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 SKALA. All rights reserved.
+</footer>
+
+</body>
+</html>
