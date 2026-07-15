@@ -1,4 +1,4 @@
 .env
 .DS_Store
-**/.agents/skills/design-taste-frontend/
-**/.claude/skills/design-taste-frontend
+**/.agents/
+**/.claude/
