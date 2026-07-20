@@ -2,3 +2,6 @@
 .DS_Store
 **/.agents/
 **/.claude/
+
+# 주피터 노트북 실행 결과 무시하기
+*.ipynb filter=dropoutput_filter
