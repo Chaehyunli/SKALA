@@ -1,41 +1,57 @@
-<!-- [과제] Project 구성과 index.html 생성 -->
+<!-- [과제] 포털 사이트형 메인 Hub 만들기 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome SKALA</title>
+  <title>임채현의 유니버스</title>
 </head>
 <body>
-  <header class="site-header">
-    <a href="index.html" class="logo">🚀 SKALA-FRONT</a>
+  <header>
+    <h1>🚀 임채현의 유니버스</h1>
+    <p>저의 프로필, 학습 내용, 여행 기록을 모아둔 개인 Hub 페이지입니다.</p>
+
     <nav>
-      <a href="myProfile.html">🙋 프로필</a>
-      <a href="myClass.html">📅 수업</a>
-      <a href="myHoliday.html">🏖️ 휴일</a>
+      <h2>📂 바로가기 메뉴</h2>
+      <ul>
+        <li><a href="myProfile.html">🙋 소개 (Profile)</a></li>
+        <li><a href="myClass.html">📅 수업 시간표 (Class)</a></li>
+        <li><a href="myHoliday.html">🏖️ 휴일 계획 (Holiday)</a></li>
+        <li><a href="myTrip.html">🌍 여행 앨범 (Album)</a></li>
+        <li><a href="signUp.html">📝 회원가입 (Sign Up)</a></li>
+      </ul>
     </nav>
-    <a href="signUp.html" class="btn-signup">회원가입</a>
   </header>
 
   <main>
-  <h1>👋 환영 인사</h1>
-  <p>스칼라에 오신 것을 환영합니다.</p>
+    <section>
+      <h2>📌 오늘의 주요 소식</h2>
 
-  <!-- 지시되지 않은 추가 실습: 프로젝트/작성자 정보를 별도 문단으로 확장 -->
-  <p>🚀 이 프로젝트는 <b>SKALA-FRONT</b>이며, 작성자는 <b>SKALA 4기 임채현</b>입니다.</p>
-  <p>💻 현재 AI 관련 풀스택 개발 강의를 함께 수강하며 HTML부터 차근차근 실습하고 있습니다.</p>
+      <article>
+        <h3>[업데이트] 여행 앨범에 사진 7장 + 브이로그 영상 추가 완료!</h3>
+        <p>myTrip 페이지에 유럽 여행 사진 7장과 브이로그 영상, 배경음악을 새로 추가했습니다. 이제 사진과 영상, 소리로 여행을 기록할 수 있습니다.</p>
+        <p>작성일: 2026년 7월 23일</p>
+      </article>
 
-  <!-- [과제] 바로가기 : 이후 실습 페이지가 추가될 때마다 이 nav에 누적해서 링크를 더한다 -->
-  <h2>🔗 바로가기</h2>
-  <ul>
-    <li><a href="myClass.html">📅 나의 수업 (myClass)</a> - AI 풀스택 강의 시간표</li>
-    <li><a href="myHoliday.html">🏖️ 나의 휴일 (myHoliday)</a> - 복습과 재충전이 있는 하루</li>
-    <li><a href="myProfile.html">🙋 나의 프로필 (myProfile)</a> - SKALA 4기 임채현 소개</li>
-    <li><a href="signUp.html">📝 회원가입 (signUp)</a> - SKALA-FRONT 회원가입 폼</li>
-  </ul>
+      <article>
+        <h3>📷 이달의 베스트 컷</h3>
+        <img src="../media/KakaoTalk_Image_2026-07-23-14-46-30_007.jpeg" alt="파리 개선문 앞에서" width="400">
+        <p>파리 개선문 앞에서</p>
+      </article>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <p>🔗 GitHub: <a href="https://github.com/Chaehyunli" target="_blank">github.com/Chaehyunli</a> · ✍️ 개발 블로그: <a href="https://ch010104.tistory.com/" target="_blank">ch010104.tistory.com</a></p>
+  <aside>
+    <h2>ℹ️ 실시간 정보</h2>
+    <p>🚀 이 프로젝트는 <b>SKALA-FRONT</b>이며, 작성자는 <b>SKALA 4기 임채현</b>입니다.</p>
+    <p>💻 현재 AI 관련 풀스택 개발 강의를 함께 수강하며 HTML부터 차근차근 실습하고 있습니다.</p>
+    <p>📧 이메일 문의: <a href="mailto:chaehyun010104@gmail.com">chaehyun010104@gmail.com</a></p>
+    <p>🔗 GitHub: <a href="https://github.com/Chaehyunli" target="_blank">github.com/Chaehyunli</a></p>
+    <p>✍️ 개발 블로그: <a href="https://ch010104.tistory.com/" target="_blank">ch010104.tistory.com</a></p>
+    <p>📚 추천 학습 사이트: <a href="https://www.w3schools.com/" target="_blank">W3Schools 온라인 명세서</a></p>
+  </aside>
+
+  <footer>
+    <p><small>© 2026 SKALA-FRONT 프로젝트. 모든 태그는 웹 표준 시맨틱 태그로 작성되었습니다.</small></p>
   </footer>
 </body>
 </html>
