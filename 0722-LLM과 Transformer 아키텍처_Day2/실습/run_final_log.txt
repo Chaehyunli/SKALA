@@ -1,0 +1,10 @@
+[final/최종 권장 설정] iter 50/450 train_loss=4.2316 val_loss=4.3447
+[final/최종 권장 설정] iter 100/450 train_loss=3.8611 val_loss=3.9659
+[final/최종 권장 설정] iter 150/450 train_loss=3.5601 val_loss=3.8251
+[final/최종 권장 설정] iter 200/450 train_loss=3.5601 val_loss=3.7648
+[final/최종 권장 설정] iter 250/450 train_loss=3.4379 val_loss=3.6840
+[final/최종 권장 설정] iter 300/450 train_loss=3.4132 val_loss=3.6146
+[final/최종 권장 설정] iter 350/450 train_loss=3.2971 val_loss=3.5857
+[final/최종 권장 설정] iter 400/450 train_loss=3.2046 val_loss=3.5225
+[final/최종 권장 설정] iter 450/450 train_loss=3.1414 val_loss=3.4690
+[final] saved -> /Users/limchaehyeon/Desktop/SKALA/0722-LLM과 Transformer 아키텍처_Day2/실습/results.json (final_recommended)
