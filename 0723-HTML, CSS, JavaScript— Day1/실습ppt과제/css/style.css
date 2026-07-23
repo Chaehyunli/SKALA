@@ -1,0 +1,102 @@
+/* [미션1] 전체 테마 및 텍스트 Styling */
+body {
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 20px;
+  line-height: 1.8;
+  color: #3a2e2c;
+  background-color: #fdf6ec;
+}
+
+h1, h2 {
+  color: #b5563c;
+  padding: 8px 12px;
+  border-bottom: 3px solid #e8a87c;
+}
+
+h1 {
+  font-size: 2.4em;
+}
+
+h2 {
+  font-size: 1.8em;
+}
+
+a {
+  color: #b5563c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* [미션2] 박스 모델의 이해 */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.trip-card {
+  background-color: #fff;
+  border: 1px solid #e8a87c;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #e8a87c;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4d9c6;
+}
+
+/* [미션3] 가독성 높은 회원가입 폼 */
+fieldset {
+  border: 2px solid #e8a87c;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="url"],
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1em;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+input[type="submit"],
+input[type="reset"] {
+  font-family: inherit;
+  font-size: 1.1em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+input[type="submit"] {
+  background-color: #b5563c;
+  color: #fff;
+}
+
+input[type="reset"] {
+  background-color: #ddd;
+  color: #333;
+}
