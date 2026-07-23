@@ -787,12 +787,18 @@ Loss만 보면 USE_CAUSAL_MASK=False 조건이 True보다 낮게 나왔다(0.084
 
 ```python
 # ===== 최종 권장 설정 (성능 최우선) =====
-N_LAYER = 12; N_HEAD = 3; N_EMBD = 192     # 2.1 근거: N_LAYER/N_HEAD/N_EMBD 각각 독립 실험에서 Val Loss가 가장 낮았던 값
-MAX_ITERS = 450; SAMPLE_EVERY = 50; SAMPLE_LENGTH = 200  # 2.2 근거: MAX_ITERS=2000 조건 내 Val Loss가 iter 450 부근에서 최저(3.5072), 이후 과적합
-BLOCK_SIZE = 64                          # 2.3 근거: 3개 조건 중 Val Loss 최저(3.4790)
-TEMPERATURE = 1.0; TOP_K = 10              # 2.4 근거: 다양성(고유문자비율 0.2091)과 반복 억제(반복bigram 0.4843) 사이 균형점
-DATA_FRACTION = 1.0                       # 2.5 근거: 3개 조건 중 Val Loss 최저(3.5392), corpus 전량 사용이 일반화에 유리
-USE_CAUSAL_MASK = True                  # 2.6 근거: 학습(마스크 있음)과 autoregressive 생성 방식을 일치시켜야 실제 생성 품질이 보장됨
+# 2.1 근거: N_LAYER/N_HEAD/N_EMBD 각각 독립 실험에서 Val Loss가 가장 낮았던 값
+N_LAYER = 12; N_HEAD = 3; N_EMBD = 192     
+# 2.2 근거: MAX_ITERS=2000 조건 내 Val Loss가 iter 450 부근에서 최저(3.5072), 이후 과적합
+MAX_ITERS = 450; SAMPLE_EVERY = 50; SAMPLE_LENGTH = 200  
+# 2.3 근거: 3개 조건 중 Val Loss 최저(3.4790)
+BLOCK_SIZE = 64                          
+# 2.4 근거: 다양성(고유문자비율 0.2091)과 반복 억제(반복bigram 0.4843) 사이 균형점
+TEMPERATURE = 1.0; TOP_K = 10          
+# 2.5 근거: 3개 조건 중 Val Loss 최저(3.5392), corpus 전량 사용이 일반화에 유리    
+DATA_FRACTION = 1.0                     
+# 2.6 근거: 학습(마스크 있음)과 autoregressive 생성 방식을 일치시켜야 실제 생성 품질이 보장됨  
+USE_CAUSAL_MASK = True                  
 ```
 
 ## 4. 최종 권장 설정 검증 실험
