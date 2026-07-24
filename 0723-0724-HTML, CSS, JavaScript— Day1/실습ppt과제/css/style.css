@@ -125,6 +125,25 @@ input[type="reset"] {
   color: #333;
 }
 
+/* [과제1] 실시간 날씨 도시 선택 select: 사이드바 폭에 맞춰 꽉 채움 */
+#citySelect {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* [과제1] 날씨 결과 카드: 사이드바 다른 박스와 통일된 톤 */
+#weather-box {
+  background-color: #fdf1e7;
+  border: 1px solid #e8a87c;
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+#weather-box p {
+  margin: 4px 0;
+}
+
 /* 자바스크립트 게임 버튼(업다운/성적 계산기/가방 보기) 세로 배치 및 스타일 */
 aside section button {
   display: block;
