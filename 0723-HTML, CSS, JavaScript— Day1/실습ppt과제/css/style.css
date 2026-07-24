@@ -1,4 +1,5 @@
 /* [미션1] 전체 테마 및 텍스트 Styling */
+/* 전체 배경/글꼴/글자색 기본값 */
 body {
   font-family: 'Nanum Pen Script', cursive;
   font-size: 20px;
@@ -7,6 +8,7 @@ body {
   background-color: #fdf6ec;
 }
 
+/* 큰 제목(h1)·중제목(h2) 공통 스타일 */
 h1, h2 {
   color: #b5563c;
   padding: 8px 12px;
@@ -21,22 +23,26 @@ h2 {
   font-size: 1.8em;
 }
 
+/* 링크 기본 색상 (밑줄 제거) */
 a {
   color: #b5563c;
   text-decoration: none;
 }
 
+/* 마우스를 올렸을 때만 밑줄 표시 */
 a:hover {
   text-decoration: underline;
 }
 
 /* [미션2] 박스 모델의 이해 */
+/* 페이지 전체 폭 제한 및 중앙 정렬 */
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 24px;
 }
 
+/* 여행지/카드형 콘텐츠 박스 (테두리, 그림자 느낌의 여백) */
 .trip-card {
   background-color: #fff;
   border: 1px solid #e8a87c;
@@ -45,6 +51,7 @@ a:hover {
   margin: 16px 0;
 }
 
+/* 시간표 테이블 정렬 */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -56,11 +63,13 @@ th, td {
   text-align: center;
 }
 
+/* 테이블 헤더 셀 배경 구분 */
 th {
   background-color: #f4d9c6;
 }
 
 /* [미션3] 가독성 높은 회원가입 폼 */
+/* 입력 항목을 묶는 그룹 상자 */
 fieldset {
   border: 2px solid #e8a87c;
   border-radius: 10px;
@@ -68,6 +77,7 @@ fieldset {
   margin-bottom: 16px;
 }
 
+/* 텍스트 계열 입력창/셀렉트/텍스트영역 공통 스타일 */
 input[type="text"],
 input[type="password"],
 input[type="date"],
@@ -81,6 +91,7 @@ textarea {
   border-radius: 6px;
 }
 
+/* 제출/초기화 버튼 공통 스타일 */
 input[type="submit"],
 input[type="reset"] {
   font-family: inherit;
@@ -91,17 +102,20 @@ input[type="reset"] {
   cursor: pointer;
 }
 
+/* 제출(회원가입) 버튼 포인트 컬러 */
 input[type="submit"] {
   background-color: #b5563c;
   color: #fff;
 }
 
+/* 초기화(다시 작성) 버튼 서브 컬러 */
 input[type="reset"] {
   background-color: #ddd;
   color: #333;
 }
 
 /* [미션4] Flex와 Grid로 레이아웃 잡기 */
+/* 바로가기 메뉴(ul>li>a)를 가로로 배치 */
 header nav ul {
   display: flex;
   flex-wrap: wrap;
@@ -110,16 +124,19 @@ header nav ul {
   gap: 16px;
 }
 
+/* index.html 본문(main)과 사이드바(aside)를 가로로 나란히 배치 */
 .content-wrapper {
   display: flex;
   gap: 24px;
   align-items: flex-start;
 }
 
+/* 본문이 70% 비율 차지 */
 .content-wrapper main {
   flex: 7;
 }
 
+/* 사이드바가 30% 비율 차지 + 구분용 배경색 */
 .content-wrapper aside {
   flex: 3;
   background-color: #f4d9c6;
@@ -127,16 +144,19 @@ header nav ul {
   border-radius: 10px;
 }
 
+/* 여행 앨범 카드를 3열 바둑판으로 배치 */
 .trip-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
+/* 그리드 안에서는 .trip-card 기본 세로 여백(margin) 제거 (grid gap이 대신 간격을 줌) */
 .trip-grid .trip-card {
   margin: 0;
 }
 
+/* 사진마다 원본 비율이 달라도 카드 높이를 통일 (object-fit으로 잘라서 채움) */
 .trip-grid .trip-card img {
   width: 100%;
   height: 220px;
@@ -145,52 +165,63 @@ header nav ul {
 }
 
 /* [미션5] 반응형 미디어 쿼리 (모바일 화면) */
+/* 화면 폭 768px 이하(모바일)에서 레이아웃을 1열로 전환 */
 @media (max-width: 768px) {
+  /* 바로가기 메뉴를 세로로 쌓기 */
   header nav ul {
     flex-direction: column;
     gap: 8px;
   }
 
+  /* 본문/사이드바를 세로로 쌓기 */
   .content-wrapper {
     flex-direction: column;
   }
 
+  /* 여행 카드 3열을 1열로 전환 */
   .trip-grid {
     grid-template-columns: 1fr;
   }
 }
 
 /* [미션6] 부드러운 전환(Transition) 및 등장 애니메이션 */
+/* 내비게이션 링크: 배경/글자색이 서서히 바뀌도록 준비 */
 nav a {
   transition: background-color 0.3s ease, color 0.3s ease;
   padding: 4px 8px;
   border-radius: 6px;
 }
 
+/* 내비게이션 링크 호버 시 포인트 컬러로 강조 */
 nav a:hover {
   background-color: #e8a87c;
   color: #fff;
 }
 
+/* 제출/초기화 버튼: 밝기 변화가 서서히 일어나도록 준비 */
 input[type="submit"],
 input[type="reset"] {
   transition: filter 0.2s ease;
 }
 
+/* 제출/초기화 버튼 호버 시 살짝 어둡게 */
 input[type="submit"]:hover,
 input[type="reset"]:hover {
   filter: brightness(0.9);
 }
 
+/* 여행 카드: 위치 이동과 그림자 변화가 서서히 일어나도록 준비 */
 .trip-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* 여행 카드 호버 시 살짝 떠오르며 그림자 진해짐 */
 .trip-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* 아래에서 위로 페이드인되는 등장 애니메이션 정의 */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -202,6 +233,7 @@ input[type="reset"]:hover {
   }
 }
 
+/* 각 페이지 헤더 제목에 등장 애니메이션 적용 */
 header h1 {
   animation: fadeInUp 0.8s ease-out forwards;
 }
