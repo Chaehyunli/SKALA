@@ -195,7 +195,7 @@ statusFilter.addEventListener('change', renderCars)
 // 수정 취소
 cancelEditButton.addEventListener('click', function () {
   // TODO: [수정 취소] 수강생 구현 #5
-  // 수정 모드를 해제하고 입력 폼을 초기화한다.
+  // 수정 모드를 해제하고 입력 폼을 초기화.
   resetForm()
 })
 
@@ -215,7 +215,7 @@ function getCarFromForm() {
   const maxYear = new Date().getFullYear()
 
   //TODO: [입력 정보 검증 및 차량 객체 반환] 수강생 구현 #6
-  // 필수 항목 누락과 값 범위를 검증하고, 통과하면 차량 객체를 반환한다.
+  // 필수 항목 누락과 값 범위를 검증하고, 통과하면 차량 객체를 반환.
   if (!maker) {
     alert('제조사를 선택하세요.')
     return null
@@ -231,13 +231,13 @@ function getCarFromForm() {
     return null
   }
 
-  if (!priceText || price < 1) {
-    alert('가격은 1이상 입력하세요.')
+  if (!mileageText || mileage < 0) {
+    alert('주행거리는 0 이상 입력하세요.')
     return null
   }
 
-  if (!mileageText || mileage < 0) {
-    alert('주행거리는 0 이상 입력하세요.')
+  if (!priceText || price < 1) {
+    alert('가격은 1이상 입력하세요.')
     return null
   }
 
@@ -252,7 +252,7 @@ function getCarFromForm() {
 // 차량 정보 수정 설정
 function startEdit(id) {
   //TODO: [차량 정보 수정 설정] 수강생 구현 #7
-  // 선택한 차량 정보를 입력 폼에 채우고 수정 모드로 전환한다.
+  // 선택한 차량 정보를 입력 폼에 채우고 수정 모드로 전환.
   const car = cars.find((c) => c.id === id)
   if (!car) {
     return
@@ -276,7 +276,7 @@ function startEdit(id) {
 // 차량 정보 삭제
 function deleteCar(id) {
   // TODO: [차량 정보 삭제] 수강생 구현 #8
-  // 확인창을 띄운 뒤 확인하면 목록에서 제거하고 다시 그린다.
+  // 확인창을 띄운 뒤 확인하면 목록에서 제거하고 다시 그림.
   const confirmed = confirm('선택한 차량을 삭제할까요?')
   if (!confirmed) {
     return
