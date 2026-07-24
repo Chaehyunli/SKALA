@@ -268,3 +268,38 @@ input[type="reset"]:hover {
 header h1 {
   animation: fadeInUp 0.8s ease-out forwards;
 }
+
+/* [과제] 헤더 제목과 회원가입/환영 배너를 같은 행에 배치 */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.header-top h1 {
+  border-bottom: none;
+}
+
+.welcome-text {
+  font-size: 1.3em;
+  color: #b5563c;
+}
+
+/* [과제] 헤더 우측 회원가입 버튼: 사이트 폰트(나눔손글씨체) 유지, 게임 버튼과 동일한 톤 */
+.header-top button {
+  font-family: inherit;
+  font-size: 1.1em;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #b5563c;
+  color: #fff;
+  transition: filter 0.2s ease;
+}
+
+.header-top button:hover {
+  filter: brightness(0.9);
+}
