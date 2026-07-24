@@ -148,22 +148,55 @@ function getStatusClass(status) {
 // 차량 등록 또는 수정 처리
 carForm.addEventListener('submit', function (event) {
   // TODO: [차량 등록 / 수정] 수강생 구현 #1
+  // 폼 기본 제출을 막고, 검증을 통과하면 등록/수정 모드에 맞게 처리.
+  event.preventDefault()
+
+  const car = getCarFromForm()
+  if (!car) {
+    return
+  }
+
+  if (editingId === null) {
+    car.id = cars.length > 0 ? Math.max(...cars.map((c) => c.id)) + 1 : 1
+    cars.push(car)
+  } else {
+    car.id = editingId
+    cars = cars.map((c) => (c.id === editingId ? car : c))
+  }
+
+  resetForm()
+  renderCars()
 })
 
 // 차량 카드 안의 수정, 삭제 버튼 처리
 carList.addEventListener('click', function (event) {
   // TODO: [차량 카드 안의 수정 / 삭제 버튼 처리] 수강생 구현 #2
+  // 클릭한 버튼의 data-action, data-id로 수정/삭제를 구분해 처리.
+  const button = event.target.closest('button')
+  if (!button) {
+    return
+  }
+
+  const id = Number(button.dataset.id)
+
+  if (button.dataset.action === 'edit') {
+    startEdit(id)
+  } else if (button.dataset.action === 'delete') {
+    deleteCar(id)
+  }
 })
 
 // 검색어를 입력할 때마다 목록을 다시 그린다.
-searchInput.addEventListener(/* TODO: [검색어 입력시 목록 재 출력] 수강생 구현 #3 */)
+searchInput.addEventListener('input', renderCars)
 
 // 판매 상태를 바꿀 때마다 목록을 다시 그린다.
-statusFilter.addEventListener(/* TODO: [판매 상태 변경시 목록 재 출력] 수강생 구현 #4 */)
+statusFilter.addEventListener('change', renderCars)
 
 // 수정 취소
 cancelEditButton.addEventListener('click', function () {
   // TODO: [수정 취소] 수강생 구현 #5
+  // 수정 모드를 해제하고 입력 폼을 초기화한다.
+  resetForm()
 })
 
 // 입력폼에서 차량 정보 가져와서 객체로 반환
@@ -179,14 +212,63 @@ function getCarFromForm() {
   const year = Number(yearText)
   const mileage = Number(mileageText)
   const price = Number(priceText)
-  const maxYear = new Date().getFullYear() + 1
+  const maxYear = new Date().getFullYear()
 
   //TODO: [입력 정보 검증 및 차량 객체 반환] 수강생 구현 #6
+  // 필수 항목 누락과 값 범위를 검증하고, 통과하면 차량 객체를 반환한다.
+  if (!maker) {
+    alert('제조사를 선택하세요.')
+    return null
+  }
+
+  if (!model) {
+    alert('모델명을 입력하세요.')
+    return null
+  }
+
+  if (!yearText || year < 1990 || year > maxYear) {
+    alert(`연식은 1990년부터 ${maxYear}년(현재 년도) 사이로 입력하세요.`)
+    return null
+  }
+
+  if (!priceText || price < 1) {
+    alert('가격은 1이상 입력하세요.')
+    return null
+  }
+
+  if (!mileageText || mileage < 0) {
+    alert('주행거리는 0 이상 입력하세요.')
+    return null
+  }
+
+  if (!fuel) {
+    alert('연료를 선택하세요.')
+    return null
+  }
+
+  return { maker, model, year, mileage, price, fuel, status }
 }
 
 // 차량 정보 수정 설정
 function startEdit(id) {
   //TODO: [차량 정보 수정 설정] 수강생 구현 #7
+  // 선택한 차량 정보를 입력 폼에 채우고 수정 모드로 전환한다.
+  const car = cars.find((c) => c.id === id)
+  if (!car) {
+    return
+  }
+
+  editingId = id
+  makerInput.value = car.maker
+  modelInput.value = car.model
+  yearInput.value = car.year
+  mileageInput.value = car.mileage
+  priceInput.value = car.price
+  fuelInput.value = car.fuel
+  statusInput.value = car.status
+
+  submitButton.textContent = '수정 완료'
+  cancelEditButton.hidden = false
 
   modelInput.focus()
 }
@@ -194,4 +276,12 @@ function startEdit(id) {
 // 차량 정보 삭제
 function deleteCar(id) {
   // TODO: [차량 정보 삭제] 수강생 구현 #8
+  // 확인창을 띄운 뒤 확인하면 목록에서 제거하고 다시 그린다.
+  const confirmed = confirm('선택한 차량을 삭제할까요?')
+  if (!confirmed) {
+    return
+  }
+
+  cars = cars.filter((c) => c.id !== id)
+  renderCars()
 }

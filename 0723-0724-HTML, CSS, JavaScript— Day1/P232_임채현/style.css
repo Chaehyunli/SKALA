@@ -29,9 +29,11 @@ body {
   width: min(1100px, 92%);
   margin: 32px auto;
 
-  /* 입력 영역과 목록 영역을 2열로 배치한다. */
+  /* 입력 영역과 목록 영역을 2열로 배치. */
   /* TODO: [입력 영역 / 목록 영역 2열 배치 ] 수강생 구현 #1 */
-
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
 }
 
 .form-card,
@@ -54,13 +56,18 @@ body {
 }
 
 .form-row {
-  /* TODO: [form -row] 수강생 구현 #2 */
- 
+  /* TODO: [form-row] 수강생 구현 #2 */
+  /* 라벨과 입력란을 세로로 배치. */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .form-row label {
   /* TODO: [form-row lable] 수강생 구현 #3 */
-  
+  /* 라벨을 굵게 표시한다. */
+  font-weight: 600;
+  font-size: 14px;
 }
 
 input,
@@ -85,7 +92,9 @@ select:focus {
 
 .button-area {
   /* TODO: [button-area] 수강생 구현 #4 */
-  
+  /* 등록/취소 버튼을 가로로 나열. */
+  display: flex;
+  gap: 10px;
 }
 
 button {
@@ -118,17 +127,35 @@ button {
 
 .search-area {
   /* TODO: [search-area] 수강생 구현 #5 */
- 
+  /* 검색 입력란과 필터 select를 가로로 배치. */
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.search-area input {
+  flex: 1;
+}
+
+.search-area select {
+  width: auto;
 }
 
 .car-list {
   /* TODO: [car-list] 수강생 구현 #6 */
-  
+  /* 차량 카드를 2열 그리드로 배치. */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .car-card {
   /* TODO: [car-card] 수강생 구현 #7 */
-  
+  /* 카드 형태로 테두리와 여백을 줌. */
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #fafafa;
 }
 
 .car-card h3 {
@@ -171,12 +198,17 @@ button {
 
 .card-actions {
   /* TODO: [car-actions] 수강생 구현 #8 */
-  
+  /* 수정/삭제 버튼을 가로로 배치. */
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .card-actions button {
   /* TODO: [card-actions button] 수강생 구현 #9 */
- 
+  /* 버튼이 폭을 균등하게 나눔. */
+  flex: 1;
+  background-color: #e5e7eb;
 }
 
 .card-actions .delete-button {
@@ -195,5 +227,12 @@ button {
 /* 화면이 좁아지면 1열로 변경한다. */
 @media (max-width: 800px) {
   /* TODO: [1열 변경] 수강생 구현 #10 */
- 
+  /* 좁은 화면에서 입력/목록 영역과 차량 카드를 1열로 변경. */
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .car-list {
+    grid-template-columns: 1fr;
+  }
 }

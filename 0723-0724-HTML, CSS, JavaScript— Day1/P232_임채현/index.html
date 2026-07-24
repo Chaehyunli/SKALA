@@ -10,6 +10,9 @@
   <body>
     <header class="page-header">
       <!-- TODO: [페이지 헤더] 수강생 구현 #1 -->
+      <!-- 페이지 제목과 부제목 출력 -->
+      <h1>중고차 목록 관리</h1>
+      <p>차량 정보를 등록하고 관리하는 CRUD 실습</p>
     </header>
 
     <main class="container">
@@ -21,40 +24,82 @@
           <!-- 제조사 정보 -->
           <div class="form-row">
             <!-- TODO: [제조사 목록] 수강생 구현 #2 -->
+            <!-- 제조사를 선택하는 select 박스 -->
+            <label for="makerInput">제조사</label>
+            <select id="makerInput">
+              <option value="" selected disabled>제조사 선택</option>
+              <option value="현대">현대</option>
+              <option value="기아">기아</option>
+              <option value="제네시스">제네시스</option>
+              <option value="쉐보레">쉐보레</option>
+              <option value="르노">르노</option>
+            </select>
           </div>
 
           <!-- 모델명 -->
           <div class="form-row">
             <!-- TODO: [모델명] 수강생 구현 #3 -->
+            <!-- 모델명을 입력하는 텍스트 입력란 -->
+            <label for="modelInput">모델명</label>
+            <input type="text" id="modelInput" placeholder="예: 쏘나타" />
           </div>
 
           <!-- 연식 -->
           <div class="form-row">
             <!-- TODO: [연식] 수강생 구현 #4 -->
+            <!-- 연식은 숫자만 입력 가능하게 pattern/inputmode를 지정 -->
+            <label for="yearInput">연식</label>
+            <input type="text" id="yearInput" inputmode="numeric" pattern="[0-9]*" placeholder="예: 2021" />
           </div>
 
           <!-- 주행거리 -->
           <div class="form-row">
             <!-- TODO: [주행거리(Km)] 수강생 구현 #5 -->
+            <!-- 주행거리는 숫자만 입력 가능하게 제한 -->
+            <label for="mileageInput">주행거리(km)</label>
+            <input type="text" id="mileageInput" inputmode="numeric" pattern="[0-9]*" placeholder="예: 43000" />
           </div>
 
           <!-- 가격 -->
           <div class="form-row">
             <!-- TODO: [가격(만원)] 수강생 구현 #6 -->
+            <!-- 가격은 숫자만 입력 가능하게 제한 -->
+            <label for="priceInput">가격(만원)</label>
+            <input type="text" id="priceInput" inputmode="numeric" pattern="[0-9]*" placeholder="예: 1850" />
           </div>
 
           <!-- 연료 -->
           <div class="form-row">
             <!-- TODO: [연료 목록] 수강생 구현 #7 -->
+            <!-- 연료 종류를 선택하는 select 박스 -->
+            <label for="fuelInput">연료</label>
+            <select id="fuelInput">
+              <option value="" selected disabled>연료 선택</option>
+              <option value="가솔린">가솔린</option>
+              <option value="디젤">디젤</option>
+              <option value="LPG">LPG</option>
+              <option value="하이브리드">하이브리드</option>
+              <option value="전기">전기</option>
+            </select>
           </div>
 
           <!-- 판매 상태 -->
           <div class="form-row">
             <!-- TODO: [판매 상태 목록] 수강생 구현 #8 -->
+            <!-- 판매 상태를 선택하는 select 박스. 기본값은 판매중 -->
+            <label for="statusInput">판매 상태</label>
+            <select id="statusInput">
+              <option value="판매중" selected>판매중</option>
+              <option value="예약중">예약중</option>
+              <option value="판매완료">판매완료</option>
+            </select>
           </div>
           <!-- 등록 / 취소 버튼 -->
           <div class="button-area">
             <!-- TODO: [등록/취소 버튼] 수강생 구현 #9 -->
+            <!-- 등록 버튼과, 수정 모드일 때만 보이는 수정 취소 버튼 -->
+            <button type="submit" id="submitButton">등록</button>
+            <button type="button" id="cancelEditButton" hidden>수정 취소</button>
           </div>
         </form>
       </section>
@@ -69,6 +114,14 @@
         <!-- 차량 검색 -->
         <div class="search-area">
           <!-- TODO: [차량 검색 및 필터 목록] 수강생 구현 #10 -->
+          <!-- 제조사/모델명 검색 입력란과 판매 상태 필터 select -->
+          <input type="text" id="searchInput" placeholder="제조사 또는 모델명 검색" />
+          <select id="statusFilter">
+            <option value="전체" selected>전체</option>
+            <option value="판매중">판매중</option>
+            <option value="예약중">예약중</option>
+            <option value="판매완료">판매완료</option>
+          </select>
         </div>
 
         <!-- empty 메시지 -->
