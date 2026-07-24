@@ -4,11 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const userName = new URLSearchParams(location.search).get('userName');
   if (userName) sessionStorage.setItem('userName', userName);
 
-  const banner = document.getElementById('authBanner');
-  if (!banner) return;
-
   const savedName = sessionStorage.getItem('userName');
-  banner.innerHTML = savedName
-    ? `<span class="welcome-text">${savedName}님! 환영합니다 🎉</span>`
-    : '<a href="signUp.html"><button type="button">📝 회원가입</button></a>';
+
+  const banner = document.getElementById('authBanner');
+  if (banner) {
+    banner.innerHTML = savedName
+      ? `<span class="welcome-text">${savedName}님! 환영합니다 🎉</span>`
+      : '<a href="signUp.html"><button type="button">📝 회원가입</button></a>';
+  }
+
+  // 로그인 상태(세션에 이름이 있음)면 각 페이지 nav의 "회원가입" 링크는 숨김
+  if (savedName) {
+    document.querySelectorAll('.signup-nav-link').forEach(el => el.style.display = 'none');
+  }
 });
