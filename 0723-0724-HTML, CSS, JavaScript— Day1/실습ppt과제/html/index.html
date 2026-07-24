@@ -13,6 +13,7 @@
   <script src="../script/bag.js" defer></script>
   <script src="../script/blackjack.js" defer></script>
   <script src="../script/auth.js" defer></script>
+  <script type="module" src="../script/realtimeInfo.js"></script>
 </head>
 <body>
   <div class="container">
@@ -62,6 +63,16 @@
     <p>🔗 GitHub: <a href="https://github.com/Chaehyunli" target="_blank">github.com/Chaehyunli</a></p>
     <p>✍️ 개발 블로그: <a href="https://ch010104.tistory.com/" target="_blank">ch010104.tistory.com</a></p>
     <p>📚 추천 학습 사이트: <a href="https://www.w3schools.com/" target="_blank">W3Schools 온라인 명세서</a></p>
+
+    <!-- [과제1] DOM/이벤트: 도시 선택 select + 결과를 보여줄 weather-box -->
+    <h3>🌤️ 실시간 세계 날씨</h3>
+    <select id="citySelect">
+      <option value="35.6762,139.6503">일본 도쿄 JP</option>
+      <option value="48.8566,2.3522">프랑스 파리 FR</option>
+      <option value="37.5665,126.9780" selected>대한민국 서울 KR</option>
+      <option value="40.7128,-74.0060">미국 뉴욕 US</option>
+    </select>
+    <div id="weather-box"></div>
 
     <section>
       <h2>🎮 자바스크립트 천국</h2>
