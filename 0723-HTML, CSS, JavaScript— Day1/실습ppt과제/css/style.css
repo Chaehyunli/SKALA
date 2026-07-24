@@ -100,3 +100,103 @@ input[type="reset"] {
   background-color: #ddd;
   color: #333;
 }
+
+/* [미션4] Flex와 Grid로 레이아웃 잡기 */
+header nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  gap: 16px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.content-wrapper main {
+  flex: 7;
+}
+
+.content-wrapper aside {
+  flex: 3;
+  background-color: #f4d9c6;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.trip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.trip-grid .trip-card {
+  margin: 0;
+}
+
+/* [미션5] 반응형 미디어 쿼리 (모바일 화면) */
+@media (max-width: 768px) {
+  header nav ul {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .trip-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* [미션6] 부드러운 전환(Transition) 및 등장 애니메이션 */
+nav a,
+.btn-signup {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+nav a:hover,
+.btn-signup:hover {
+  background-color: #e8a87c;
+  color: #fff;
+}
+
+input[type="submit"],
+input[type="reset"] {
+  transition: filter 0.2s ease;
+}
+
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+  filter: brightness(0.9);
+}
+
+.trip-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trip-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+header h1 {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
