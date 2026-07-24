@@ -36,15 +36,16 @@ function playBlackjack() {
     "21을 넘기면(Bust) 즉시 패배하며, 내가 멈추면 딜러가 합계 17 이상이 될 때까지 자동으로 카드를 뽑습니다."
   );
 
-  var player = [drawCard(), drawCard()];
-  var dealer = [drawCard(), drawCard()];
+  var player = [drawCard(), drawCard()]; // 플레이어는 시작할 때 2장의 카드를 받음
+  var dealer = [drawCard()]; // 딜러는 시작할 때 1장의 카드를 받음
 
   while (handTotal(player) < 21 && confirm(
     "내 카드: " + player.join(", ") + " (합계: " + handTotal(player) + ")\n" +
-    "딜러 공개 카드: " + dealer[0] + "\n" +
+    "딜러 공개 카드: " + dealer.join(", ") + " (합계: " + handTotal(dealer) + ")\n" +
     "카드를 더 뽑으시겠습니까?"
   )) {
     player.push(drawCard());
+    dealer.push(drawCard());
   }
 
   var playerTotal = handTotal(player);
