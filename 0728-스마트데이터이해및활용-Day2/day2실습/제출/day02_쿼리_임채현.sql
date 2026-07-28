@@ -126,9 +126,9 @@ SELECT
     c.country_name AS "국가명(country_name)",
     COUNT(*) AS "국가별 근무 사원 수"
 FROM employees e
-JOIN departments d ON d.department_id = e.department_id
-JOIN locations l ON l.location_id = d.location_id
-JOIN countries c ON c.country_id = l.country_id
+JOIN departments d ON d.department_id = e.department_id -- departments가 NULL인 employees가 있을 수 있음
+JOIN locations l ON l.location_id = d.location_id -- departments가 NULL인 employees가 있을 수 있음
+JOIN countries c ON c.country_id = l.country_id -- departments가 NULL인 employees가 있을 수 있음
 GROUP BY c.country_id, c.country_name
 ORDER BY "국가별 근무 사원 수" DESC, "국가명(country_name)";
 
@@ -696,9 +696,9 @@ SELECT
     COUNT(*) AS employee_count,
     ROUND(AVG(e.salary), 2) AS avg_salary
 FROM employees e
-INNER JOIN departments d ON d.department_id = e.department_id
-INNER JOIN locations l ON l.location_id = d.location_id
-INNER JOIN countries c ON c.country_id = l.country_id
+INNER JOIN departments d ON d.department_id = e.department_id -- departments가 NULL인 employees가 있을 수 있음
+INNER JOIN locations l ON l.location_id = d.location_id -- departments가 NULL인 employees가 있을 수 있음
+INNER JOIN countries c ON c.country_id = l.country_id -- departments가 NULL인 employees가 있을 수 있음
 GROUP BY c.country_id, c.country_name
 WITH DATA;
 
@@ -724,8 +724,8 @@ ORDER BY employee_count DESC, country_name;
 -- TODO: 아래에 SQL을 작성하십시오.
 
 SELECT
-    CASE WHEN GROUPING(d.department_name) = 1 THEN '[전체 부서]'
-         ELSE COALESCE(d.department_name, '부서 미배정')
+    CASE WHEN GROUPING(d.department_name) = 1 THEN '[전체 부서]' -- CUBE로 인해 NULL이 나온 경우, GROUPING(d.department_name) = 1
+         ELSE COALESCE(d.department_name, '부서 미배정') -- d.department_name의 속성값 자체가 NULL인 경우
     END AS "부서명(department_name)",
     CASE WHEN GROUPING(j.job_title) = 1 THEN '[전체 직무]'
          ELSE j.job_title
@@ -739,8 +739,8 @@ SELECT
         ELSE '상세'
     END AS "집계 수준"
 FROM employees e
-LEFT JOIN departments d ON d.department_id = e.department_id
-INNER JOIN jobs j ON j.job_id = e.job_id
+LEFT JOIN departments d ON d.department_id = e.department_id -- departments가 없는 employees가 있을 수 있음.
+INNER JOIN jobs j ON j.job_id = e.job_id -- LEFT JOIN을 해도 동일(제약조건으로 인해, Job이 없는 employees은 없기 때문)
 GROUP BY CUBE (d.department_name, j.job_title)
 ORDER BY
     GROUPING(d.department_name),
@@ -755,7 +755,7 @@ ORDER BY
 
 SELECT
     CASE WHEN GROUPING(EXTRACT(YEAR FROM e.hire_date)) = 1 THEN '[전체 연도]'
-         ELSE EXTRACT(YEAR FROM e.hire_date)::text
+         ELSE EXTRACT(YEAR FROM e.hire_date)::text -- e.hire_date이 '2003-06-17'이면, YEAR은 2003
     END AS "입사 연도(hire_year)",
     CASE WHEN GROUPING(CASE WHEN e.commission_pct IS NOT NULL THEN '수령' ELSE '미수령' END) = 1 THEN '[전체]'
          ELSE CASE WHEN e.commission_pct IS NOT NULL THEN '수령' ELSE '미수령' END
@@ -806,10 +806,10 @@ SELECT
         ELSE '상세'
     END AS "집계 수준"
 FROM employees e
-INNER JOIN departments d ON d.department_id = e.department_id
+INNER JOIN departments d ON d.department_id = e.department_id -- departments는 nullable이라 INNER JOIN하면, departments가 NULL인 employees를 누락하게 되지만, 국가 → 도시 → 부서 계층별이라는 비지니스 성격상 국가=NULL, 도시=NULL, 부서=NULL, 합계=6200, 사원수=1 은 의도적으로 제외함.
 INNER JOIN locations l ON l.location_id = d.location_id
 INNER JOIN countries c ON c.country_id = l.country_id
-GROUP BY ROLLUP (c.country_name, l.city, d.department_name)
+GROUP BY ROLLUP (c.country_name, l.city, d.department_name) -- 국가 → 도시 → 부서 계층별
 ORDER BY
     GROUPING(c.country_name),
     c.country_name,
@@ -838,10 +838,10 @@ SELECT
         ELSE '상세'
     END AS "집계 수준"
 FROM employees e
-LEFT JOIN departments d ON d.department_id = e.department_id
+LEFT JOIN departments d ON d.department_id = e.department_id -- ORDER BY에서 최상위 기준이 입사 연도이기 때문에, department가 NULL인 employees도 필수로 포함
 GROUP BY ROLLUP (EXTRACT(YEAR FROM e.hire_date), d.department_name)
 ORDER BY
-    GROUPING(EXTRACT(YEAR FROM e.hire_date)),
+    GROUPING(EXTRACT(YEAR FROM e.hire_date)), -- 최상위 기준이 입사 연도임
     EXTRACT(YEAR FROM e.hire_date),
     GROUPING(d.department_name),
     d.department_name;

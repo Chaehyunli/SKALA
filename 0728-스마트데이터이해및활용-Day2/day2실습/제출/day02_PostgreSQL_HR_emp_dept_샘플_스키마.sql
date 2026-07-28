@@ -69,11 +69,11 @@ CREATE TABLE hr.employees (
     email          varchar(50)   NOT NULL UNIQUE,
     phone_number   varchar(20),
     hire_date      date          NOT NULL,
-    job_id         varchar(10)   NOT NULL,
+    job_id         varchar(10)   NOT NULL, -- NOT NULL
     salary         numeric(10,2) NOT NULL,
     commission_pct numeric(4,2),
-    manager_id     integer,
-    department_id  integer,
+    manager_id     integer, -- NULL 허용
+    department_id  integer, -- NULL 허용
     CONSTRAINT ck_employees_salary CHECK (salary > 0),
     CONSTRAINT ck_employees_commission
         CHECK (commission_pct IS NULL OR commission_pct BETWEEN 0 AND 1),
