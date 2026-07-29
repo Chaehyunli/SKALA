@@ -929,7 +929,7 @@ ORDER BY indexname desc;
 */
 
 
--- 잘못된 쿼리: 서브쿼리 결과에 NULL이 있어 전체 결과가 0건이 될 수 있다. -> NOT IN 사
+-- 잘못된 쿼리: 서브쿼리 결과에 NULL이 있어 전체 결과가 0건이 될 수 있다. -> NOT IN 사용
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF)
 SELECT e.employee_id, e.employee_no, e.full_name
 FROM employees AS e
@@ -970,7 +970,7 @@ CREATE INDEX idx_training_completed_emp
 
 ANALYZE employee_training;
 
--- 정확한 쿼리 -> NOT EXISTS 사
+-- 정확한 쿼리 -> NOT EXISTS 사용
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF)
 SELECT e.employee_id, e.employee_no, e.full_name
 FROM employees AS e
