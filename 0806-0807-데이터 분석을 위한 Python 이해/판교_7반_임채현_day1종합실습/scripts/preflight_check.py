@@ -43,14 +43,18 @@ EXPECTED_VERSIONS = {
 
 
 def run_command(command: list[str], title: str) -> str:
-    """명령을 실행하고 실패하면 검사 과정을 중단합니다."""
+    """명령을 실행하고 실패하면 검사 과정을 중단합니다.
+
+    check_ruff()/check_git_history()/main()의 pytest 실행이 모두 이 함수를 거치므로,
+    "실행 -> 출력 표시 -> 실패 시 예외" 패턴을 한 곳에서만 구현하면 된다.
+    """
     print(f"\n=== {title} ===")
     result = subprocess.run(
         command,
         cwd=PROJECT_ROOT,
         text=True,
         capture_output=True,
-        check=False,
+        check=False,  # 여기서 바로 예외를 던지지 않고, 아래에서 returncode를 직접 확인한다.
     )
 
     if result.stdout:
@@ -77,7 +81,10 @@ def check_package_versions() -> None:
 
 
 def check_output_files() -> None:
-    """weather/country/ip 각각의 CSV, Parquet, 성능 결과 JSON을 검사합니다."""
+    """weather/country/ip 각각의 CSV, Parquet, 성능 결과 JSON을 검사합니다.
+
+    app/main.py를 먼저 실행해 data/output/에 결과 파일이 생성돼 있어야 통과한다.
+    """
     required_files = [
         WEATHER_CSV,
         WEATHER_PARQUET,
@@ -112,6 +119,8 @@ def check_output_files() -> None:
     with PERFORMANCE_FILE.open("r", encoding="utf-8") as file:
         performance = json.load(file)
 
+    # storage.save_with_performance()가 반환하는 딕셔너리 키와 1:1로 맞춘 목록.
+    # app/storage.py의 반환 필드가 바뀌면 이 목록도 같이 바꿔야 한다.
     required_keys = {"name", "rows", "csv_seconds", "parquet_seconds", "csv_bytes", "parquet_bytes"}
     for entry in performance:
         if not required_keys.issubset(entry):
@@ -151,6 +160,8 @@ def main() -> None:
     """제출 전에 필요한 검사를 순서대로 실행합니다."""
     print("Day 1 종합실습 제출 전 검사")
 
+    # 검사 순서는 "빠르고 저렴한 검사 먼저, 느린 검사 나중"으로 배치했다.
+    # 버전/파일 존재 확인은 즉시 끝나지만 pytest/ruff는 실제로 코드를 실행하므로 더 오래 걸린다.
     check_package_versions()
     check_output_files()
 
