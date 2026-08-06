@@ -1,0 +1,65 @@
+[
+  {
+    "row": {
+      "month": "",
+      "region": "서울",
+      "category": "전자",
+      "amount": 1000
+    },
+    "error": [
+      {
+        "type": "string_too_short",
+        "loc": [
+          "month"
+        ],
+        "msg": "String should have at least 1 character",
+        "input": "",
+        "ctx": {
+          "min_length": 1
+        }
+      }
+    ]
+  },
+  {
+    "row": {
+      "month": "2024-05",
+      "region": "",
+      "category": "식품",
+      "amount": 500
+    },
+    "error": [
+      {
+        "type": "string_too_short",
+        "loc": [
+          "region"
+        ],
+        "msg": "String should have at least 1 character",
+        "input": "",
+        "ctx": {
+          "min_length": 1
+        }
+      }
+    ]
+  },
+  {
+    "row": {
+      "month": "2024-05",
+      "region": "부산",
+      "category": "의류",
+      "amount": -200
+    },
+    "error": [
+      {
+        "type": "greater_than",
+        "loc": [
+          "amount"
+        ],
+        "msg": "Input should be greater than 0",
+        "input": -200,
+        "ctx": {
+          "gt": 0.0
+        }
+      }
+    ]
+  }
+]
