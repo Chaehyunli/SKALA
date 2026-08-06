@@ -63,6 +63,8 @@ async def run_pipeline() -> None:
     )
     ip_records, ip_errors = validate_many(IPInfo, [raw_data["ip"]], "ip")
 
+    # 3개 소스의 오류를 한데 모아, 하나라도 있으면 파이프라인을 여기서 멈춘다.
+    # (검증 실패 데이터를 그대로 저장 단계로 흘려보내지 않기 위한 안전장치)
     validation_errors = weather_errors + country_errors + ip_errors
     if validation_errors:
         save_json(validation_errors, VALIDATION_ERROR_OUTPUT)
@@ -80,8 +82,10 @@ async def run_pipeline() -> None:
     )
 
     print("\n=== 3. CSV / Parquet 저장 및 성능 측정 ===")
+    # 소스마다 스키마가 달라(weather=72행, country/ip=1행) 하나의 표로 합치지 않고
+    # save_with_performance()를 세 번 호출해 각각 별도 CSV/Parquet 쌍으로 저장한다.
     weather_perf = save_with_performance(weather_records, WEATHER_CSV, WEATHER_PARQUET)
-    weather_perf["name"] = "weather"
+    weather_perf["name"] = "weather"  # 나중에 performance_result.json에서 구분하기 위한 라벨
     country_perf = save_with_performance(country_records, COUNTRY_CSV, COUNTRY_PARQUET)
     country_perf["name"] = "country"
     ip_perf = save_with_performance(ip_records, IP_CSV, IP_PARQUET)
@@ -115,16 +119,26 @@ async def run_pipeline() -> None:
 
 
 def main() -> None:
-    """예외를 사용자에게 알기 쉬운 메시지로 출력합니다."""
+    """예외를 사용자에게 알기 쉬운 메시지로 출력합니다.
+
+    예외 종류별로 분기하는 이유: 스택 트레이스만 보여주는 대신, 원인 범주
+    (API 문제 / 패키지 미설치 / 그 외 실행 오류)를 한눈에 알 수 있는 메시지를
+    먼저 보여주고, SystemExit(1)로 종료 코드를 비정상(1)으로 남긴다.
+    (이 종료 코드는 scripts/preflight_check.py의 run_command()가 실패 판정에 사용한다.)
+    """
     try:
         asyncio.run(run_pipeline())
     except ApiFetchError as exc:
+        # HTTP 상태 오류/네트워크 오류가 api_client.py에서 여기까지 하나로 통일돼 온다.
         print(f"[API 오류] {exc}")
         raise SystemExit(1) from exc
     except ImportError as exc:
+        # httpx/pydantic/pandas/pyarrow 중 하나라도 미설치면 여기서 잡힌다.
         print("[의존성 오류] requirements.txt를 다시 설치하세요.")
         raise SystemExit(1) from exc
     except (OSError, RuntimeError, ValueError) as exc:
+        # 파일 I/O 실패(OSError), 검증 오류로 인한 의도적 중단(RuntimeError),
+        # CSV/Parquet 불일치(ValueError) 등 나머지 실행 중 오류를 포괄한다.
         print(f"[실행 오류] {exc}")
         raise SystemExit(1) from exc
 

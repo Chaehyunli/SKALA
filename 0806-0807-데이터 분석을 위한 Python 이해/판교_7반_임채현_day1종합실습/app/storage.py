@@ -38,7 +38,11 @@ def save_with_performance(
     csv_path: Path,
     parquet_path: Path,
 ) -> dict[str, float | int]:
-    """레코드 리스트를 CSV/Parquet로 각각 저장하고, 쓰기 시간·파일 크기를 측정합니다."""
+    """레코드 리스트를 CSV/Parquet로 각각 저장하고, 쓰기 시간·파일 크기를 측정합니다.
+
+    반환값은 main.py에서 그대로 performance_result.json에 쌓이는 딕셔너리라서,
+    "지금 몇 건을 얼마 만에 어떤 크기로 저장했는지"를 재실행 없이 파일로 남길 수 있다.
+    """
     csv_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Pydantic 모델 리스트 -> DataFrame. model_dump()로 각 레코드를 dict로 바꿔 pandas에 넘긴다.
@@ -80,16 +84,20 @@ def verify_saved_data(
     (weather처럼 datetime 컬럼은 CSV/Parquet 왕복 시 문자열 표현이 달라질 수 있어
      key_column 비교를 생략하고 건수만 확인하도록 호출부에서 선택한다.)
     """
+    # save_with_performance()가 방금 쓴 파일을 곧바로 다시 읽어 "왕복"이 온전한지 확인한다.
     csv_data = pd.read_csv(csv_path)
     parquet_data = pd.read_parquet(parquet_path, engine="pyarrow")
 
     csv_rows = len(csv_data)
     parquet_rows = len(parquet_data)
 
+    # 건수부터 다르면 컬럼 비교는 의미가 없으므로 여기서 바로 중단한다.
     if csv_rows != parquet_rows:
         raise ValueError(f"CSV와 Parquet의 행 수가 다릅니다: {csv_path.name}")
 
     if key_column is not None:
+        # tolist()로 비교하는 이유: pandas Series끼리 == 비교는 원소별 bool Series를
+        # 반환해 그대로 if 조건에 못 쓰므로, 순수 파이썬 list로 바꿔 통째로 비교한다.
         if csv_data[key_column].tolist() != parquet_data[key_column].tolist():
             raise ValueError(f"CSV와 Parquet의 {key_column} 값이 다릅니다: {csv_path.name}")
 
