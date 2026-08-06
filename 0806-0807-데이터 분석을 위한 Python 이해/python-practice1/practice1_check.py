@@ -85,6 +85,7 @@ def main() -> None:
 
     generator_size = sys.getsizeof(sales_generator)
     list_size = sys.getsizeof(sales_list)
+    assert generator_size < list_size
     print(f"[INFO] 리스트 크기: {list_size} bytes")
     print(f"[INFO] 제너레이터 크기: {generator_size} bytes")
     print(
