@@ -16,6 +16,7 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from pprint import pprint
+from types import GeneratorType
 
 
 SALES_DATA_PATH = Path(__file__).with_name("Python_Practice1_Data.json")
@@ -108,6 +109,69 @@ def rank_top_monthly_categories(
     )[:3]
 
 
+def verify_results(
+    records: list[dict],
+    sales_over_threshold: list[dict],
+    region_sales_total: dict[str, int],
+    region_transaction_count: Counter,
+    category_amount_map: dict[str, list[int]],
+    sales_generator,
+    sales_list: list[dict],
+    monthly_category_sales: dict[str, dict[str, int]],
+    top_categories: list[tuple[str, str, int]],
+) -> None:
+    """각 문제의 계산 결과가 기대값과 일치하는지 assert로 검증합니다."""
+    assert len(records) == 100
+
+    # 문제 1
+    assert len(sales_over_threshold) == 47
+    assert all(record["amount"] >= 1000 for record in sales_over_threshold)
+    assert region_sales_total == {
+        "광주": 9620,
+        "대구": 12660,
+        "대전": 11140,
+        "부산": 10930,
+        "서울": 20060,
+        "세종": 10820,
+        "울산": 11700,
+        "인천": 14530,
+    }
+    assert sum(region_sales_total.values()) == 101460
+
+    # 문제 2
+    assert region_transaction_count.most_common() == [
+        ("서울", 14),
+        ("부산", 13),
+        ("대구", 13),
+        ("인천", 12),
+        ("광주", 12),
+        ("대전", 12),
+        ("울산", 12),
+        ("세종", 12),
+    ]
+    assert sum(len(amounts) for amounts in category_amount_map.values()) == len(records)
+    assert len(category_amount_map["전자"]) == 39
+
+    # 문제 3
+    assert isinstance(sales_generator, GeneratorType)
+    assert len(sales_list) == 47
+
+    # 문제 4
+    aggregated_total = sum(
+        amount
+        for category_totals in monthly_category_sales.values()
+        for amount in category_totals.values()
+    )
+    assert aggregated_total == 101460
+    assert top_categories == [
+        ("2024-02", "전자", 15240),
+        ("2024-04", "전자", 14010),
+        ("2024-03", "전자", 13820),
+    ]
+
+    print("전체 검사를 통과했습니다.\n")
+
+
 def main() -> None:
     records = read_sales_records(SALES_DATA_PATH)
 
@@ -124,6 +188,18 @@ def main() -> None:
 
     monthly_category_sales = compute_monthly_category_sales(records)
     top_categories = rank_top_monthly_categories(monthly_category_sales)
+
+    verify_results(
+        records,
+        sales_over_threshold,
+        region_sales_total,
+        region_transaction_count,
+        category_amount_map,
+        sales_generator,
+        sales_list,
+        monthly_category_sales,
+        top_categories,
+    )
 
     print("1. 전체 거래 건수")
     print(len(records))
