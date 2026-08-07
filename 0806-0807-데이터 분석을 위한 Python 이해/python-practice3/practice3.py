@@ -12,16 +12,14 @@
 # 변경사항 내역 (날짜, 변경목적, 변경내용 순으로 기입)
 # 2026-08-07, 최초 작성, sales_100k.csv 자동 생성 스크립트 + 문제 1~4 구현
 # 2026-08-07, 실데이터 반영, 교수님이 주신 실제 sales_100k.csv(100만행,
-#             region/category/amount에 결측치 포함)로 교체하면서
-#             pandas.groupby가 NaN 키를 자동 제외하는 것과 다르게
-#             Polars/DuckDB는 NULL도 그룹으로 잡는 차이를 발견 -> 세 집계
-#             모두 region/category가 결측인 행을 동일하게 제외하도록 통일
-# 2026-08-07, 문서화, 함수별 상세 주석과 파일 읽기 오류 처리, 회고 추가
-# 2026-08-07, 정리, 실제 CSV를 항상 사용하므로 합성 데이터 생성 함수
-#             (generate_sales_csv) 제거
-# 2026-08-07, 버그 수정, timeit 비교에서 Pandas만 이미 로드된 DataFrame으로
-#             groupby만 재고 Polars/DuckDB는 파일 스캔까지 재는 불공정한
-#             비교였던 것을 세 도구 모두 파일에서 새로 읽도록 통일
+#             region/category/amount에 결측치 포함)로 교체. pandas.groupby는
+#             NaN 키를 자동으로 빼는데 Polars/DuckDB는 NULL도 그룹으로 잡길래
+#             세 집계 모두 결측 행을 동일하게 제외하도록 맞춤
+# 2026-08-07, 문서화, 함수 설명이랑 파일 읽기 오류 처리, 회고 추가
+# 2026-08-07, 정리, 실제 CSV만 쓰니까 합성 데이터 생성 함수(generate_sales_csv) 제거
+# 2026-08-07, 버그 수정, timeit 비교에서 Pandas는 이미 읽어둔 DataFrame으로
+#             groupby만 재고 Polars/DuckDB는 파일 스캔까지 재고 있어서 불공정했음.
+#             세 도구 모두 파일부터 새로 읽도록 통일
 #
 # ------------------------------------------------------------------
 import timeit
@@ -35,12 +33,10 @@ DATA_PATH = Path(__file__).with_name("sales_100k.csv")
 
 
 def load_sales_csv(file_path: Path) -> pd.DataFrame:
-    """sales_100k.csv를 pandas DataFrame으로 로드합니다.
+    """sales_100k.csv를 읽어서 DataFrame으로 반환.
 
-    파일이 없거나(FileNotFoundError) 형식이 깨져 파싱이 안 되는 경우
-    (pandas.errors.ParserError)를 각각 구분해 원인을 알 수 있는 메시지로
-    다시 던진다. 그냥 죽게 두는 대신 어떤 파일이 왜 문제인지 알려주면
-    디버깅 시간이 줄어든다.
+    파일이 없는 경우(FileNotFoundError)랑 형식이 깨진 경우(ParserError)를
+    구분해서 무슨 파일이 문제인지 메시지로 남긴다.
     """
     try:
         return pd.read_csv(file_path)
@@ -54,9 +50,9 @@ def load_sales_csv(file_path: Path) -> pd.DataFrame:
 
 # ===== 문제 1: Pandas EDA (df.info, isnull().sum()) + IQR 이상치 제거 =====
 def pandas_eda_clean(df: pd.DataFrame) -> tuple[pd.DataFrame, float, float]:
-    """기본 EDA를 출력하고 amount 컬럼을 IQR 기준으로 이상치 제거합니다.
+    """EDA 출력하고 amount를 IQR 기준으로 이상치 제거.
 
-    정상 범위는 "Q1 - 1.5*IQR ~ Q3 + 1.5*IQR" 공식을 그대로 따른다.
+    정상 범위는 Q1 - 1.5*IQR ~ Q3 + 1.5*IQR.
     """
     print(df.info())
     print(df.isnull().sum())
@@ -64,11 +60,10 @@ def pandas_eda_clean(df: pd.DataFrame) -> tuple[pd.DataFrame, float, float]:
     q1 = df["amount"].quantile(0.25)
     q3 = df["amount"].quantile(0.75)
     iqr = q3 - q1
-    lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr  # Q1-1.5*IQR ~ Q3+1.5*IQR
+    lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
 
     before = len(df)
-    # Series.between(lower, upper)는 NaN에 대해 False를 반환하므로
-    # amount가 결측인 행도 이상치와 함께 자연스럽게 제거된다.
+    # between()은 NaN이면 False라서 amount 결측치도 여기서 같이 걸러진다
     cleaned = df[df["amount"].between(lower, upper)]
     print(f"이상치 제거 전: {before}건 / 제거 후: {len(cleaned)}건 (IQR 범위 [{lower:.1f}, {upper:.1f}])")
 
@@ -78,14 +73,12 @@ def pandas_eda_clean(df: pd.DataFrame) -> tuple[pd.DataFrame, float, float]:
 # ===== 문제 2: Pandas groupby named aggregation
 #       (region·category별 total/mean/count, 총매출 내림차순) =====
 def pandas_named_agg(df: pd.DataFrame) -> pd.DataFrame:
-    """agg({'amount': 'sum'}) 처럼 컬럼명을 pandas가 임의로 정하게 두지 않고,
-    total=('amount','sum') 형태로 결과 컬럼명을 직접 지정한다(named aggregation).
+    """region/category별 named aggregation. 컬럼명을 total=('amount','sum')처럼
+    직접 지정해서 agg({'amount': 'sum'})의 자동 생성 컬럼명에 의존하지 않는다.
 
-    dropna(subset=[...])로 region/category가 결측인 행을 먼저 제거하는 이유:
-    pandas.groupby는 기본적으로 그룹 키가 NaN인 행을 조용히 제외하지만,
-    Polars/DuckDB는 NULL도 하나의 그룹으로 포함시킨다. 이 차이를 그대로 두면
-    세 결과의 그룹 개수가 달라져 동일 집계라고 볼 수 없으므로, 세 함수 모두
-    결측 키 행을 명시적으로 제외해 기준을 통일한다.
+    region/category 결측 행은 dropna로 먼저 뺀다. pandas.groupby는 그룹 키가
+    NaN이면 자동으로 빠지는데 Polars/DuckDB는 NULL도 그룹으로 잡아서, 그냥 두면
+    세 결과의 그룹 수가 달라진다.
     """
     return (
         df.dropna(subset=["region", "category"])
@@ -99,10 +92,9 @@ def pandas_named_agg(df: pd.DataFrame) -> pd.DataFrame:
 # ===== 문제 3: 문제 2와 동일한 집계를 Polars Lazy API로 재작성
 #       (scan_csv -> filter -> group_by -> agg -> sort -> collect) =====
 def polars_lazy_agg(file_path: Path, lower: float, upper: float) -> pl.DataFrame:
-    """read_csv가 아닌 scan_csv로 시작해 LazyFrame을 만들고,
-    체인 끝에 collect()를 호출해 실제 DataFrame으로 실체화한다.
-    lower/upper는 Pandas EDA 단계(문제 1)에서 계산한 값을 그대로 받아써서
-    세 도구가 동일한 IQR 경계로 필터링하도록 맞춘다.
+    """scan_csv로 LazyFrame을 만들고 collect()까지 체이닝.
+    lower/upper는 문제 1에서 구한 값을 그대로 받아써서 세 도구가 같은 IQR
+    경계로 필터링하도록 맞춘다.
     """
     return (
         pl.scan_csv(file_path)
@@ -124,11 +116,10 @@ def polars_lazy_agg(file_path: Path, lower: float, upper: float) -> pl.DataFrame
 
 # ===== 문제 4: 문제 2와 동일한 집계를 DuckDB SQL(GROUP BY)로 작성 =====
 def duckdb_sql_agg(file_path: Path, lower: float, upper: float) -> pd.DataFrame:
-    """DuckDB SQL의 GROUP BY로 Pandas/Polars와 동일한 집계를 수행하고
-    .df()로 결과를 pandas DataFrame으로 변환해 반환합니다.
+    """DuckDB GROUP BY로 동일 집계를 실행하고 .df()로 pandas DataFrame으로 반환.
 
-    SQL 문자열 자체의 오타나 존재하지 않는 컬럼 참조 등은 duckdb.Error로
-    올라오므로, 어떤 쿼리가 실패했는지 알 수 있게 감싸서 재발생시킨다.
+    쿼리 오타나 없는 컬럼 참조는 duckdb.Error로 올라오는데, 어떤 쿼리가
+    실패했는지 알 수 있게 메시지를 붙여 다시 던진다.
     """
     query = f"""
         SELECT region, category,
@@ -149,12 +140,11 @@ def duckdb_sql_agg(file_path: Path, lower: float, upper: float) -> pd.DataFrame:
 
 # ===== timeit으로 Pandas/Polars/DuckDB 실행 시간 비교 =====
 def compare_runtime(file_path: Path, lower: float, upper: float, number: int = 5) -> None:
-    """"CSV 읽기 + IQR 필터링 + region·category 집계"를 세 도구 모두 file_path에서
-    매번 새로 읽어 number번씩 반복 실행한 시간을 비교합니다.
+    """CSV 읽기 + IQR 필터링 + region·category 집계를 세 도구 모두 파일에서
+    매번 새로 읽어 number번씩 반복한 시간을 비교.
 
-    Pandas만 이미 메모리에 있는 DataFrame으로 groupby만 재는 반면 Polars/DuckDB는
-    파일 스캔·파싱 비용까지 포함하면 비교 대상이 서로 달라져 불공정해지므로,
-    세 도구 모두 파일에서 새로 읽어오도록 통일한다.
+    Pandas만 이미 읽어둔 DataFrame으로 groupby만 재면 Polars/DuckDB의 파일
+    스캔 비용이 통째로 빠져서 비교가 안 맞으니, 세 도구 다 파일부터 새로 읽는다.
     """
 
     def pandas_pipeline() -> pd.DataFrame:
@@ -172,7 +162,7 @@ def compare_runtime(file_path: Path, lower: float, upper: float, number: int = 5
 
 
 def main() -> None:
-    # 문제 1: Pandas EDA + IQR 이상치 제거 (lower/upper는 이후 2~4에서 공통으로 재사용)
+    # 문제 1: Pandas EDA + IQR 이상치 제거 (lower/upper는 2~4에서 계속 재사용)
     raw_df = load_sales_csv(DATA_PATH)
     cleaned_df, lower, upper = pandas_eda_clean(raw_df)
 
@@ -191,7 +181,7 @@ def main() -> None:
     duckdb_result = duckdb_sql_agg(DATA_PATH, lower, upper)
     print(duckdb_result.head())
 
-    # 세 도구가 정말 "동일 집계"를 했는지 그룹 개수로 교차 확인 (다르면 바로 드러남)
+    # 세 결과가 진짜 같은 집계인지 그룹 개수로 한번 교차 확인
     assert len(pandas_result) == len(polars_result) == len(duckdb_result)
 
     # 문제 4: timeit으로 세 도구 실행 시간 비교
@@ -206,36 +196,32 @@ if __name__ == "__main__":
 # 회고
 #
 # 1) Pandas EDA + IQR 이상치 제거
-#    - 처음엔 자체 생성한 합성 데이터(sales_100k.csv, 10만행)로 만들었는데,
-#      교수님이 실제 데이터(100만행, region/category/amount에 결측치 포함)를
-#      주시면서 practice3_check.py의 len(raw_df) == 100_000 같은 값을
-#      하드코딩해두면 데이터가 바뀔 때마다 깨진다는 걸 체감했다. 이후로는
-#      "몇 건이어야 한다"는 절대값 대신 "결측 제거 후 건수가 줄어드는지" 같은
-#      상대적인 조건으로 검증하도록 고쳤다.
-#    - between(lower, upper)이 NaN에는 False를 반환한다는 점 덕분에
-#      amount 결측치(5000건)가 이상치 제거 단계에서 별도 처리 없이도
-#      자연스럽게 함께 걸러졌다.
+#    - 처음엔 직접 만든 합성 데이터(10만행)로 시작했는데, 교수님이 실제
+#      데이터(100만행, 결측치 포함)를 주시면서 practice3_check.py에
+#      len(raw_df) == 100_000 같은 값을 그대로 박아둔 게 문제가 됐다.
+#      "몇 건이어야 한다"보다 "결측 제거 후 줄어들었는지" 같은 상대적인
+#      조건으로 검증하는 게 데이터가 바뀌어도 안 깨진다.
+#    - between()이 NaN을 False로 처리해줘서 amount 결측치(5000건)도
+#      이상치 제거 단계에서 따로 손댈 필요 없이 같이 빠졌다.
 #
 # 2) Pandas groupby named aggregation
-#    - agg(total=('amount','sum'), ...) 형태의 named aggregation은
-#      agg({'amount': 'sum'})과 달리 결과 컬럼명을 코드에서 바로 결정하므로,
-#      이후 Polars/DuckDB 결과와 컬럼명을 맞추기가 훨씬 쉬웠다.
+#    - total=('amount','sum') 식으로 쓰면 결과 컬럼명이 코드에 바로
+#      드러나서, 이후 Polars/DuckDB 결과랑 컬럼명 맞추기가 쉬웠다.
 #
 # 3) Polars Lazy API로 동일 집계
-#    - scan_csv는 즉시 읽지 않고 실행 계획만 세우다가 collect()에서 한 번에
-#      최적화해 실행한다는 걸 실제로 확인했다. collect()를 빼먹으면
-#      LazyFrame 객체만 출력되고 실제 집계 결과가 안 나온다는 걸 실수로
-#      한 번 겪어보고 나서야 "왜 감점 대상에 collect() 누락이 따로 있는지"
-#      이해가 됐다.
+#    - scan_csv는 바로 안 읽고 실행 계획만 세우다가 collect()에서 한번에
+#      돌아간다. collect() 빼먹으면 LazyFrame 객체만 나오고 결과가 안
+#      찍힌다는 걸 한 번 실수하고 나서야 체감했다.
 #
 # 4) DuckDB SQL + 세 도구 성능 비교
-#    - 세 도구 모두 같은 IQR 경계(lower/upper)와 같은 결측치 처리 기준을
-#      쓰도록 통일하고 나서야 그룹 개수(64개)와 총매출 합계가 정확히
-#      일치했다. 겉보기엔 "같은 집계"처럼 보여도 각 도구의 기본 동작
-#      (pandas의 NaN 키 자동 제외 vs Polars/DuckDB의 NULL 그룹화)이
-#      미묘하게 달라서, 결과를 눈으로 훑어보는 것만으로는 이 차이를
-#      못 잡고 assert로 교차 검증했을 때 비로소 드러났다.
-#    - timeit 반복 횟수(number=5)를 세 도구 모두 동일하게 맞추니
-#      Polars가 가장 빠르고 DuckDB가 매 호출마다 CSV를 다시 스캔하는
-#      구조라 상대적으로 느리다는 경향을 일관되게 확인할 수 있었다.
+#    - 같은 IQR 경계와 같은 결측치 기준을 쓰도록 맞추고 나서야 그룹
+#      개수(64개)랑 총매출 합계가 정확히 맞았다. pandas는 NaN 키를
+#      자동으로 빼고 Polars/DuckDB는 NULL도 그룹으로 잡는 차이를 눈으로는
+#      못 알아채고 assert로 교차 검증하다가 발견했다.
+#    - 처음엔 DuckDB가 Pandas보다 느리게 나와서 이상하다 싶었는데, 알고
+#      보니 pandas_time만 이미 읽어둔 DataFrame으로 groupby를 재고 있었다.
+#      세 도구 다 파일에서 새로 읽도록 고치니 Pandas 2.67초, Polars 0.21초,
+#      DuckDB 0.61초로 나와서 원래 예상대로 Polars/DuckDB가 훨씬 빨랐다.
+#      timeit 벤치마크는 "뭘 재고 있는지"부터 맞춰야 숫자가 의미 있다는 걸
+#      배웠다.
 # ------------------------------------------------------------------
