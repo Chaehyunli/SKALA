@@ -20,6 +20,8 @@
 # 2026-08-07, 버그 수정, timeit 비교에서 Pandas는 이미 읽어둔 DataFrame으로
 #             groupby만 재고 Polars/DuckDB는 파일 스캔까지 재고 있어서 불공정했음.
 #             세 도구 모두 파일부터 새로 읽도록 통일
+# 2026-08-07, 연계 준비, python-practice4가 별도 폴더/가상환경이라 import 대신
+#             파일로 넘기기 위해 이상치 제거된 DataFrame과 집계 결과를 CSV로 저장
 #
 # ------------------------------------------------------------------
 import timeit
@@ -30,6 +32,8 @@ import pandas as pd
 import polars as pl
 
 DATA_PATH = Path(__file__).with_name("sales_100k.csv")
+CLEANED_OUTPUT_PATH = Path(__file__).with_name("sales_100k_cleaned.csv")
+AGG_OUTPUT_PATH = Path(__file__).with_name("region_category_agg.csv")
 
 
 def load_sales_csv(file_path: Path) -> pd.DataFrame:
@@ -170,6 +174,11 @@ def main() -> None:
     print("\n1. Pandas named aggregation (상위 5개)")
     pandas_result = pandas_named_agg(cleaned_df)
     print(pandas_result.head())
+
+    # practice4에서 재사용할 수 있게 이상치 제거된 DataFrame과 집계 결과를
+    # 파일로 저장 (practice4는 별도 폴더/가상환경이라 import 대신 파일로 넘긴다)
+    cleaned_df.to_csv(CLEANED_OUTPUT_PATH, index=False)
+    pandas_result.to_csv(AGG_OUTPUT_PATH, index=False)
 
     # 문제 3: Polars Lazy API로 동일 집계
     print("\n2. Polars Lazy 집계 (상위 5개)")
