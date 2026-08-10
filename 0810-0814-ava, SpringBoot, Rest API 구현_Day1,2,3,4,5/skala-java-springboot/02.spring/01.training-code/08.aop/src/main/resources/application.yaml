@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: myapp
+  profiles:
+    active: local
+
+logging:
+  level:
+    '[com.sk.skala.myapp.controller]': DEBUG
+    '[com.sk.skala.myapp.service]': DEBUG
+
+

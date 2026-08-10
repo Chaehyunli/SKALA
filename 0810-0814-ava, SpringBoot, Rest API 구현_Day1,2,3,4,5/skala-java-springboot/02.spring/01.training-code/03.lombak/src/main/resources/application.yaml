@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: myapp
+
+logging:
+  level:
+    '[com.sk.skala.myapp.controller]': DEBUG
+    '[com.sk.skala.myapp.service]': DEBUG

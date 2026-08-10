@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: myapp
+  profiles:
+    active: local
+  web:
+    resources:
+      chain:
+        strategy:
+          content:
+            enabled: true   # 정적 리소스 콘텐츠 버저닝: 파일 내용 해시를 URL에 포함 (예: style-a3b8c9.css)
+            paths: /**      # 내용이 바뀌면 URL이 바뀌므로 브라우저가 오래 캐시해도 항상 최신 파일을 받음
+      cache:
+        cachecontrol:
+          max-age: 365d     # 버저닝된 URL은 1년간 캐시 허용 (내용 변경 시 URL 자체가 바뀜)
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+    display-request-duration: true
+    try-it-out-enabled: true
+  show-actuator: false
+
+management:
+  server:
+    port: 8080 # Actuator 포트 설정
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Prometheus endpoint 노출
+  endpoint:
+    health:
+      show-details: always # Health endpoint 상세 정보 노출
+      probes:
+        enabled: true # LivenessState, ReadinessState 활성화
+  health:
+    livenessState:
+      enabled: true # LivenessState 활성화
+    readinessState:
+      enabled: true # ReadinessState 활성화
+  metrics:
+    enable:
+      all: true # 모든 기본 메트릭 활성화
+
+logging:
+  level:
+    '[com.sk.skala.myapp.controller]': DEBUG
+    '[com.sk.skala.myapp.service]': DEBUG

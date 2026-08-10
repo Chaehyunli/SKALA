@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+developer:
+  owner:
+    name: yona
+    role: backend
+    level: middle
+  team:
+    position: "4th floor"
+    detail: "class 4"
