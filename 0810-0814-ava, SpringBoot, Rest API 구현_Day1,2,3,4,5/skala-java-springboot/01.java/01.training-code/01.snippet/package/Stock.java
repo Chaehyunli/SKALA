@@ -1,4 +1,4 @@
-package skala.domain;
+//package skala.domain;
 
 public class Stock {
     protected String name;

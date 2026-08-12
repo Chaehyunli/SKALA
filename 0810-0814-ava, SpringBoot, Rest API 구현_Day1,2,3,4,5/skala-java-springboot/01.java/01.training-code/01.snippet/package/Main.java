@@ -1,6 +1,6 @@
-package skala;
+// package skala;
 
-import skala.domain.Stock;
+// import skala.domain.Stock;
 
 public class Main {
     static void printStockInfo(Stock stock) {
