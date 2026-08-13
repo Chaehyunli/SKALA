@@ -9,12 +9,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sk.skala.myapp.aspect.Metrics;
 import com.sk.skala.myapp.domain.User;
+import com.sk.skala.myapp.dto.UserRequest;
+import com.sk.skala.myapp.dto.UserResponse;
 import com.sk.skala.myapp.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -26,27 +31,24 @@ public class UserController {
     }
 
     // 모든 사용자 조회
+    @Metrics
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers().stream().map(UserResponse::from).toList();
     }
 
     // GET: 특정 사용자 가져오기
+    @Metrics
     @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable long id) {
-        return userService.getUserById(id).orElse(null);
-    }
-
-    // GET: @RequestParam을 사용하여 특정 사용자 검색
-    @GetMapping("/users/search")
-    public User getUserByIdParam(@RequestParam long id) {
-        return userService.getUserById(id).orElse(null);
+    public UserResponse getUserById(@PathVariable long id) {
+        return userService.getUserById(id).map(UserResponse::from).orElse(null);
     }
 
     // POST: 사용자 추가
     @PostMapping("/users")
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public UserResponse createUser(@RequestBody UserRequest request) {
+        User user = userService.createUser(request);
+        return UserResponse.from(user);
     }
 
     // DELETE: 사용자 삭제
@@ -57,7 +59,7 @@ public class UserController {
 
     // PUT: 사용자 정보 수정
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable long id, @RequestBody User updatedUser) {
-        return userService.updateUser(id, updatedUser).orElse(null);
+    public UserResponse updateUser(@PathVariable long id, @RequestBody UserRequest request) {
+        return userService.updateUser(id, request).map(UserResponse::from).orElse(null);
     }
 }

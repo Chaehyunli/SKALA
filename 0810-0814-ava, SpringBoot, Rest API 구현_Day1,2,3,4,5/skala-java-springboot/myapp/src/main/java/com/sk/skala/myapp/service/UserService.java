@@ -4,11 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.sk.skala.myapp.domain.User;
+import com.sk.skala.myapp.dto.UserRequest;
 import com.sk.skala.myapp.repository.UserRepository;
 
+import jakarta.validation.Valid;
+
 @Service
+@Validated
 public class UserService {
 
     private final UserRepository userRepository;
@@ -28,7 +33,10 @@ public class UserService {
     }
 
     // 사용자 추가
-    public User createUser(User user) {
+    public User createUser(@Valid UserRequest request) {
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
         return userRepository.save(user);
     }
 
@@ -38,10 +46,10 @@ public class UserService {
     }
 
     // 사용자 정보 수정
-    public Optional<User> updateUser(long id, User updatedUser) {
+    public Optional<User> updateUser(long id, @Valid UserRequest request) {
         return userRepository.findById(id).map(user -> {
-            user.setName(updatedUser.getName());
-            user.setEmail(updatedUser.getEmail());
+            user.setName(request.name());
+            user.setEmail(request.email());
             return userRepository.save(user);
         });
     }
