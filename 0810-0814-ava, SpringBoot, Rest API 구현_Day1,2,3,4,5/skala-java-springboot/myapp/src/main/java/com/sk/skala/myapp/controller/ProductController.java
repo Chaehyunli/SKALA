@@ -59,17 +59,30 @@ public class ProductController {
         return productService.getProductsByStatus(status).stream().map(ProductResponse::from).toList();
     }
 
+    // GET: 사용자 ID 또는 이름으로 조회
+    @GetMapping(value = "/user", params = "userId")
+    public List<ProductResponse> getProductsByUserId(@RequestParam Long userId) {
+        return productService.getProductsByUserId(userId).stream().map(ProductResponse::from).toList();
+    }
+
+    @GetMapping(value = "/user", params = "name")
+    public List<ProductResponse> getProductsByUserName(@RequestParam String name) {
+        return productService.getProductsByUserName(name).stream().map(ProductResponse::from).toList();
+    }
+
     // POST: 등록
     @PostMapping
     public ProductResponse createProduct(@RequestBody @Valid ProductRequest request) {
-        Product product = productService.createProduct(toEntity(request));
+        Product product = productService.createProduct(toEntity(request), request.userId());
         return ProductResponse.from(product);
     }
 
     // PUT: 수정
     @PutMapping("/{id}")
     public ProductResponse updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest request) {
-        return productService.updateProduct(id, toEntity(request)).map(ProductResponse::from).orElse(null);
+        return productService.updateProduct(id, toEntity(request), request.userId())
+                .map(ProductResponse::from)
+                .orElse(null);
     }
 
     // DELETE: 삭제

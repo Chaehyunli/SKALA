@@ -24,8 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserServiceConfig {
 
-    private static final DateTimeFormatter TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
     @Bean
     public UserService userService(UserRepository userRepository) {

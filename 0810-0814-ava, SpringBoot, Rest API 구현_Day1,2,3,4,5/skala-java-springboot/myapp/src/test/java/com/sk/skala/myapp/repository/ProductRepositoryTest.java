@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sk.skala.myapp.domain.Product;
 import com.sk.skala.myapp.domain.ProductStatus;
+import com.sk.skala.myapp.domain.User;
 
 @DataJpaTest
 class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void findByStatus_returns_only_matching_products() {
@@ -22,6 +26,10 @@ class ProductRepositoryTest {
         soldOut.setPrice(1000);
         soldOut.setStockQuantity(0);
         soldOut.setStatus(ProductStatus.SOLD_OUT);
+        User user = new User();
+        user.setName("테스트 사용자");
+        user.setEmail("test@sk.com");
+        soldOut.setUser(userRepository.save(user));
         productRepository.save(soldOut);
 
         assertThat(productRepository.findByStatus(ProductStatus.SOLD_OUT))
