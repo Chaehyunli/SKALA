@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sk.skala.myapp.domain.Product;
 import com.sk.skala.myapp.domain.ProductStatus;
@@ -12,6 +13,7 @@ import com.sk.skala.myapp.repository.ProductRepository;
 import com.sk.skala.myapp.repository.UserRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -46,12 +48,14 @@ public class ProductService {
     }
 
     // [신규 상품 등록]
+    @Transactional
     public Product createProduct(Product product, Long userId) {
         product.setUser(findUser(userId));
         return productRepository.save(product);
     }
 
     // [기존 상품 정보 수정]
+    @Transactional
     public Optional<Product> updateProduct(Long id, Product updated, Long userId) {
         return productRepository.findById(id).map(product -> {
             product.setName(updated.getName());
@@ -70,6 +74,7 @@ public class ProductService {
     }
 
     // [상품 삭제]
+    @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }

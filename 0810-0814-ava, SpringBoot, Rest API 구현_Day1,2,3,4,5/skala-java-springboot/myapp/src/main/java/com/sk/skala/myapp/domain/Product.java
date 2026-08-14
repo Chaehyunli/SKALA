@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,6 +49,9 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 이 상품을 등록한 사용자
+
+    @Version
+    private Long version; // 낙관적 락: 충돌 감지용 버전 번호
 
     @Transient
     private String displayLabel; // "상품명 (상태)" 형태의 표시용 라벨, DB에 저장 안 됨

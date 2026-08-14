@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sk.skala.myapp.domain.User;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 
 @Service
 @Validated
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -33,6 +35,7 @@ public class UserService {
     }
 
     // 사용자 추가
+    @Transactional
     public User createUser(@Valid UserRequest request) {
         User user = new User();
         user.setName(request.name());
@@ -41,11 +44,13 @@ public class UserService {
     }
 
     // 사용자 삭제
+    @Transactional
     public void deleteUser(long id) {
         userRepository.deleteById(id);
     }
 
     // 사용자 정보 수정
+    @Transactional
     public Optional<User> updateUser(long id, @Valid UserRequest request) {
         return userRepository.findById(id).map(user -> {
             user.setName(request.name());
