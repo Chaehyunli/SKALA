@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sk.skala.myapp.domain.Product;
 import com.sk.skala.myapp.domain.ProductStatus;
+import com.sk.skala.myapp.domain.User;
 import com.sk.skala.myapp.dto.ProductRequest;
 import com.sk.skala.myapp.service.ProductService;
 
@@ -45,6 +46,10 @@ class ProductControllerTest {
         product.setStockQuantity(10);
         product.setStatus(ProductStatus.ON_SALE);
         product.setDescription("고성능 개발용 노트북입니다.");
+        User user = new User();
+        user.setId(1L);
+        user.setName("홍길동");
+        product.setUser(user);
         return product;
     }
 
@@ -78,8 +83,8 @@ class ProductControllerTest {
 
     @Test
     void createProduct_returns_created_product() throws Exception {
-        ProductRequest request = new ProductRequest("노트북", 1500000, 10, ProductStatus.ON_SALE, "고성능 개발용 노트북입니다.");
-        given(productService.createProduct(any(Product.class))).willReturn(sampleProduct());
+        ProductRequest request = new ProductRequest("노트북", 1500000, 10, ProductStatus.ON_SALE, "고성능 개발용 노트북입니다.", 1L);
+        given(productService.createProduct(any(Product.class), eq(1L))).willReturn(sampleProduct());
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +95,7 @@ class ProductControllerTest {
 
     @Test
     void createProduct_with_blank_name_returns_bad_request() throws Exception {
-        ProductRequest request = new ProductRequest("", 1500000, 10, ProductStatus.ON_SALE, null);
+        ProductRequest request = new ProductRequest("", 1500000, 10, ProductStatus.ON_SALE, null, 1L);
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -100,10 +105,10 @@ class ProductControllerTest {
 
     @Test
     void updateProduct_returns_updated_product() throws Exception {
-        ProductRequest request = new ProductRequest("노트북 Pro", 1800000, 5, ProductStatus.ON_SALE, "업그레이드된 노트북입니다.");
+        ProductRequest request = new ProductRequest("노트북 Pro", 1800000, 5, ProductStatus.ON_SALE, "업그레이드된 노트북입니다.", 1L);
         Product updated = sampleProduct();
         updated.setName("노트북 Pro");
-        given(productService.updateProduct(eq(1L), any(Product.class))).willReturn(Optional.of(updated));
+        given(productService.updateProduct(eq(1L), any(Product.class), eq(1L))).willReturn(Optional.of(updated));
 
         mockMvc.perform(put("/api/products/1")
                         .contentType(MediaType.APPLICATION_JSON)

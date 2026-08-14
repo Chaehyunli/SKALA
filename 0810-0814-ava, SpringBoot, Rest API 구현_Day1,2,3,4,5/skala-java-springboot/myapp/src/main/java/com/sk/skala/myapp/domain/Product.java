@@ -8,6 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -41,6 +44,10 @@ public class Product {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description; // 상품 상세 설명 (대용량 텍스트)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // 이 상품을 등록한 사용자
 
     @Transient
     private String displayLabel; // "상품명 (상태)" 형태의 표시용 라벨, DB에 저장 안 됨

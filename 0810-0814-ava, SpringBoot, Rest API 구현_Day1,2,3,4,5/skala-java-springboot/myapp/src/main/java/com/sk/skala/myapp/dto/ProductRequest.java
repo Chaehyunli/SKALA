@@ -17,6 +17,9 @@ public record ProductRequest(
 
         @NotNull(message = "상품 상태는 필수입니다") ProductStatus status,
 
-        String description
+        String description,
+
+        @NotNull(message = "사용자 ID는 필수입니다")
+        @PositiveOrZero(message = "사용자 ID는 0 이상이어야 합니다") Long userId
 ) {
 }

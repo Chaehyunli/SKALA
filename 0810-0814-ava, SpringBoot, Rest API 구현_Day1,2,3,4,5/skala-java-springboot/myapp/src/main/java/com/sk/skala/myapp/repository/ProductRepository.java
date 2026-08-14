@@ -13,4 +13,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // 상태별 상품 목록 조회 (쿼리 메서드)
     List<Product> findByStatus(ProductStatus status);
+
+    List<Product> findByUserId(Long userId);
+
+    List<Product> findByUserName(String userName);
 }
