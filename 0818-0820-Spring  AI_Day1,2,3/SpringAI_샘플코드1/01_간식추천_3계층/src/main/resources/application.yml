@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: 01_간식추천_3계층
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    doc-expansion: none
+
+logging:
+  level:
+    com.skala: DEBUG
