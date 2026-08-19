@@ -58,9 +58,7 @@ public class Lab2IngestService {
     /** 문서 하나를 읽어서 분할하고, 같은 source 의 기존 청크를 지운 뒤 새로 저장한다. */
     private IngestResult ingest(Resource doc, String source, String version) {
         var reader = new TextReader(doc);                          // .md 파일 → Document 객체로 변환
-        // 커스텀 메타데이터 — 검색 결과에서 "어느 문서에서 나왔는지"를 알려면 여기서 심어야 한다.
-        // 인제스트가 끝난 뒤(검색·답변 단계)에는 청크에 메타데이터를 추가할 방법이 없다.
-        reader.getCustomMetadata().put("source", source);           // 나중에 못 넣는다
+        // version 은 커스텀 메타데이터로 넣으면 그대로 유지된다.
         reader.getCustomMetadata().put("version", version);
 
         // 토큰 개수 기준으로 문서를 청크 단위로 쪼갠다.
@@ -69,6 +67,12 @@ public class Lab2IngestService {
                 .withMinChunkSizeChars(200)                          // 너무 짧은 청크(문장 조각)는 만들지 않는다
                 .build();
         List<Document> chunks = splitter.apply(reader.get());       // 실제 분할 실행 → 청크(Document) 목록
+
+        // 주의: TextReader.get() 은 customMetadata 에 우리가 넣어 둔 "source" 값이 있어도
+        // 항상 resource 파일명(예: return-policy.md)으로 덮어써 버린다.
+        // 확장자가 붙은 값이 필터 키로 쓰이면 아래 delete 필터(source=return-policy)와
+        // 어긋나 재색인이 항상 실패하므로, 분할이 끝난 청크에 우리가 원하는 값으로 다시 심는다.
+        chunks.forEach(chunk -> chunk.getMetadata().put("source", source));
 
         // 재인제스트 대비: 같은 source 의 기존 청크를 먼저 지운다.
         // 이걸 안 하면 매번 호출할 때마다 같은 문서의 청크가 중복으로 쌓여
