@@ -1,6 +1,11 @@
 package com.skala.day2.web.dto;
 
-public record AskRequest(String question, Integer topK, Double threshold) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record AskRequest(
+        String question,
+        @Schema(defaultValue = "4") Integer topK,
+        @Schema(defaultValue = "0.5") Double threshold) {
 
     public AskRequest {
         if (topK == null) {
