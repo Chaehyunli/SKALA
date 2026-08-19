@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.skala.day2.domain.Order;
 import com.skala.day2.repository.OrderRepository;
-import com.skala.day2.web.SummaryResponse;
+import com.skala.day2.web.dto.SummaryResponse;
 
 /**
  * 업무 흐름은 여기. 주문을 못 찾으면 모델을 부르지 않는다.

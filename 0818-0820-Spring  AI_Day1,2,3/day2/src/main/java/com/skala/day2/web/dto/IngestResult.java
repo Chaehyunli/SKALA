@@ -1,4 +1,4 @@
-package com.skala.day2.web;
+package com.skala.day2.web.dto;
 
 /**
  * 인제스트 API(POST /lab2/ingest) 응답 한 건.

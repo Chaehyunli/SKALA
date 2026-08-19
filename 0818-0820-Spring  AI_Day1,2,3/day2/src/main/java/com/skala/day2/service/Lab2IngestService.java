@@ -1,6 +1,6 @@
 package com.skala.day2.service;
 
-import com.skala.day2.web.IngestResult;
+import com.skala.day2.web.dto.IngestResult;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;

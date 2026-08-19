@@ -1,6 +1,6 @@
 package com.skala.day2.service;
 
-import com.skala.day2.web.AnswerDto;
+import com.skala.day2.web.dto.AnswerDto;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,9 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class Lab2AskService {
 
-    private static final int TOP_K = 4;
-    private static final double THRESHOLD = 0.5;
-
     private final Lab2RetrieveService retrieveService;
     private final ChatClient askChatClient;
 
@@ -30,8 +27,8 @@ public class Lab2AskService {
         this.askChatClient = askChatClient;
     }
 
-    public AnswerDto ask(String question) {
-        List<Document> docs = retrieveService.retrieve(question, TOP_K, THRESHOLD);
+    public AnswerDto ask(String question, int topK, double threshold) {
+        List<Document> docs = retrieveService.retrieve(question, topK, threshold);
         if (docs.isEmpty()) {
             return AnswerDto.unknown();          // 근거가 없으면 모델을 부르지 않는다
         }

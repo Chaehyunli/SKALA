@@ -1,6 +1,7 @@
-package com.skala.day2.web;
+package com.skala.day2.web.controller;
 
 import com.skala.day2.service.Lab2RetrieveService;
+import com.skala.day2.web.dto.Chunk;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

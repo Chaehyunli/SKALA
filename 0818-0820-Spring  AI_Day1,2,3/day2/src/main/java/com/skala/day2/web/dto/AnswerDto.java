@@ -1,4 +1,4 @@
-package com.skala.day2.web;
+package com.skala.day2.web.dto;
 
 import java.util.List;
 

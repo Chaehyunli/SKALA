@@ -1,6 +1,7 @@
-package com.skala.day2.web;
+package com.skala.day2.web.controller;
 
 import com.skala.day2.service.Lab2IngestService;
+import com.skala.day2.web.dto.IngestResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;

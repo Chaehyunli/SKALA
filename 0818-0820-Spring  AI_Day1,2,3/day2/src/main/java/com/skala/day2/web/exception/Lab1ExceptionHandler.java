@@ -1,4 +1,4 @@
-package com.skala.day2.web;
+package com.skala.day2.web.exception;
 
 import java.util.UUID;
 
@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.skala.day2.service.OrderNotFoundException;
+import com.skala.day2.web.dto.ErrorResponse;
 
 /**
  * 예외를 응답으로 바꾸는 자리는 한 곳이다. AI 가 실패해도 화면은 살린다.
  */
 @RestControllerAdvice
-class Lab1ExceptionHandler {
+public class Lab1ExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(Lab1ExceptionHandler.class);
 
