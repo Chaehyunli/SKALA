@@ -28,6 +28,8 @@ public class RouterLab {
 
     public record 점수(int value, String reason) {}
 
+    private record 분류결과(스타일 route) {}
+
     private final ChatClient 분류기, 작은모델, 큰모델, 평가자;
 
     public RouterLab(ChatModel model) {
@@ -49,7 +51,7 @@ public class RouterLab {
     public String ask(@RequestParam String q) {
         스타일 route = 분류기.prompt()                        // 먼저 고른다
                 .system("질문에 어울리는 답변 스타일을 하나 고른다.")
-                .user(q).call().entity(스타일.class);
+                .user(q).call().entity(분류결과.class).route();
 
         String 답 = switch (route) {                          // 경로별로 다르게 답한다
             case 짧게 -> 작은모델.prompt().system("한 문장으로만 답한다.").user(q)
