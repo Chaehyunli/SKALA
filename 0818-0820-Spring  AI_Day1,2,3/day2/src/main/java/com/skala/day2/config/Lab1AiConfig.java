@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * <p>호출부마다 정하게 두면 누군가는 기본값(0.7)으로 부르고, 그날부터 요약이 매번 달라진다.
  */
 @Configuration
-public class Lab2AiConfig {
+public class Lab1AiConfig {
 
     @Bean
     ChatClient summaryChatClient(ChatClient.Builder builder) {

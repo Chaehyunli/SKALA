@@ -17,11 +17,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 /**
  * 컨트롤러는 AI 를 모른다 — 오늘의 합격 기준.
  *
- * <p>확인: {@code curl 'localhost:8080/lab2/orders/12345/summary?userId=user1'}
+ * <p>확인: {@code curl 'localhost:8080/lab1/orders/12345/summary?userId=user1'}
  */
 @RestController
-@RequestMapping("/lab2/orders")
-@Tag(name = "Day2 실습 · 주문 요약")
+@RequestMapping("/lab1/orders")
+@Tag(name = "Day1 실습 · 주문 요약")
 public class OrderSummaryController {
 
     private final OrderSummaryService service;   // ← ChatClient 는 여기 없다

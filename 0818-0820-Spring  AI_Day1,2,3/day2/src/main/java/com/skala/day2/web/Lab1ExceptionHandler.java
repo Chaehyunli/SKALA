@@ -14,9 +14,9 @@ import com.skala.day2.service.OrderNotFoundException;
  * 예외를 응답으로 바꾸는 자리는 한 곳이다. AI 가 실패해도 화면은 살린다.
  */
 @RestControllerAdvice
-class Lab2ExceptionHandler {
+class Lab1ExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(Lab2ExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(Lab1ExceptionHandler.class);
 
     @ExceptionHandler(OrderNotFoundException.class)
     ResponseEntity<ErrorResponse> notFound(OrderNotFoundException e) {
