@@ -33,4 +33,11 @@ dependencyManagement {
     imports { mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}" }
 }
 
-tasks.named('test') { useJUnitPlatform() }
+tasks.named('test') {
+    useJUnitPlatform()
+    systemProperty 'eval', project.hasProperty('eval')   // ./gradlew test -Peval 로만 모델 호출 테스트 실행
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = true                        // log.info/log.warn 이 콘솔에 그대로 보여야 실패 원인을 읽는다
+    }
+}
