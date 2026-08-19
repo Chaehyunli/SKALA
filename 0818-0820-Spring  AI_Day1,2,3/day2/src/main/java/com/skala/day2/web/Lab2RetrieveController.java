@@ -1,8 +1,7 @@
 package com.skala.day2.web;
 
+import com.skala.day2.service.Lab2RetrieveService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +19,10 @@ import java.util.List;
 @Tag(name = "Day2 실습 · 문서 Q&A")
 public class Lab2RetrieveController {
 
-    private final VectorStore vectorStore;
+    private final Lab2RetrieveService retrieveService;
 
-    public Lab2RetrieveController(VectorStore vectorStore) {
-        this.vectorStore = vectorStore;
+    public Lab2RetrieveController(Lab2RetrieveService retrieveService) {
+        this.retrieveService = retrieveService;
     }
 
     /**
@@ -38,11 +37,7 @@ public class Lab2RetrieveController {
     public List<Chunk> retrieve(@RequestParam String q,
                                  @RequestParam(defaultValue = "4") int topK,
                                  @RequestParam(defaultValue = "0.5") double threshold) {
-        return vectorStore.similaritySearch(SearchRequest.builder()
-                        .query(q).topK(topK)
-                        .similarityThreshold(threshold)   // 낮은 점수는 근거가 아니다 — 걸러낸다. 호출부에서 조정 가능
-                        .build())
-                .stream()
+        return retrieveService.retrieve(q, topK, threshold).stream()
                 .map(d -> new Chunk(
                         d.getMetadata().get("source").toString(),
                         d.getScore(),                 // 점수를 그대로 노출한다
