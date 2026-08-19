@@ -31,9 +31,12 @@ class Lab2GoldenSetTest {
 
     private static final Logger log = LoggerFactory.getLogger(Lab2GoldenSetTest.class);
 
-    // 실험표 A(기준) 조합 — Step5 에서 이 값을 바꿔가며 재실행한다.
+    // 실험표 A(기준) 조합 — Step5 에서 이 값들을 바꿔가며 재실행한다. 한 번에 하나만 바꾼다.
+    private static final int CHUNK_SIZE = 400;
+    private static final int MIN_CHUNK_SIZE_CHARS = 200;
+    private static final boolean OVERLAP = true;   // 실험 F — true 로 바꾸면 청크끼리 20% 겹쳐서 이어붙인다
     private static final int TOP_K = 4;
-    private static final double THRESHOLD = 0.1;
+    private static final double THRESHOLD = 0.2;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -44,7 +47,7 @@ class Lab2GoldenSetTest {
 
     @BeforeEach
     void ingest() {
-        ingestService.ingestAll();   // 벡터스토어가 인메모리라 테스트마다 새로 채운다
+        ingestService.ingestAll(CHUNK_SIZE, MIN_CHUNK_SIZE_CHARS, OVERLAP);   // 벡터스토어가 인메모리라 테스트마다 새로 채운다
     }
 
     @Test
