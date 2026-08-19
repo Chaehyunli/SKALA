@@ -1,0 +1,22 @@
+# ============================================================
+# STEP 04 - Advisor
+# ============================================================
+server:
+  port: 8104
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        model: gpt-5-mini
+
+logging:
+  level:
+    # 이 설정이 이번 STEP의 핵심이다.
+    # SimpleLoggerAdvisor는 DEBUG 레벨로 로그를 남기는데,
+    # Spring Boot의 기본 로그 레벨은 INFO라 이 줄이 없으면 아무것도 보이지 않는다.
+    #
+    # 로그에는 LLM에 전달된 최종 프롬프트 전문과 원본 응답이 찍힌다.
+    # 개인정보가 포함될 수 있으므로 운영 환경에서는 INFO 이상으로 되돌린다.
+    org.springframework.ai.chat.client.advisor: DEBUG

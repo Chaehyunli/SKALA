@@ -1,0 +1,11 @@
+dependencies {
+    // ChatMemory / MessageChatMemoryAdvisor도 코어에 포함되어 있다.
+    // 단, 대화 이력을 DB에 영속화하려면 별도 저장소 의존성이 추가로 필요하다.
+    // (예: spring-ai-starter-model-chat-memory-repository-jdbc)
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

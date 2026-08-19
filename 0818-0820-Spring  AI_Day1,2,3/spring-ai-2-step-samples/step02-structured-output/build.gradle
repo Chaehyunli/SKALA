@@ -1,0 +1,10 @@
+dependencies {
+    // 의존성은 STEP 01과 완전히 동일하다.
+    // 구조화 출력은 별도 라이브러리 없이 ChatClient의 entity()만으로 동작한다.
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

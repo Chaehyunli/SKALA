@@ -1,0 +1,10 @@
+dependencies {
+    // SimpleLoggerAdvisor는 Spring AI 코어에 포함되어 있어 추가 의존성이 없다.
+    // 이번 STEP에서 달라지는 것은 build.gradle이 아니라 application.yml의 로그 레벨이다.
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

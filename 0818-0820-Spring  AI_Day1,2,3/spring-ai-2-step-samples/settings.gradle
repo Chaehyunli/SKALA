@@ -1,0 +1,23 @@
+// ============================================================
+// 멀티 모듈 구성 파일
+// 여기에 등록된 디렉터리만 Gradle 모듈로 인식된다.
+//
+// 실행 예)
+//   ./gradlew :step01-basic-chat:bootRun
+//   ./gradlew :step09-evaluation:test
+// ============================================================
+rootProject.name = 'spring-ai-2-step-samples'
+
+include(
+    'step01-basic-chat',        // ChatClient 기본 호출
+    'step02-structured-output', // 응답을 Java 객체로 받기
+    'step03-streaming',         // SSE 스트리밍 응답
+    'step04-advisor',           // Advisor(인터셉터) 개념
+    'step05-memory',            // 멀티턴 대화 기억
+    'step06-rag-pgvector',      // RAG + 벡터 DB
+    'step07-tool-calling',      // LLM이 우리 함수를 호출
+    'step08-mcp-server',        // 도구를 MCP 서버로 분리 (먼저 실행)
+    'step08-mcp-client',        // 원격 MCP 도구 사용
+    'step09-evaluation',        // 응답 품질 자동 평가
+    'step10-observability'      // 지표/로그 관측
+)

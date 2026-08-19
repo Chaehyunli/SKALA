@@ -1,0 +1,15 @@
+dependencies {
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    // 판단은 LLM이 하므로 클라이언트 쪽에는 모델 스타터가 필요하다.
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    // MCP 클라이언트 스타터.
+    // application.yml에 적은 서버들에 기동 시 접속해 도구 목록을 받아오고,
+    // 이를 ToolCallbackProvider Bean으로 등록해 준다.
+    implementation 'org.springframework.ai:spring-ai-starter-mcp-client'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

@@ -1,0 +1,31 @@
+# ============================================================
+# STEP 08 (Server) - MCP 서버 설정
+#
+# 이 서버는 도구를 제공하기만 하고 LLM을 호출하지 않으므로
+# OpenAI 관련 설정이 전혀 없다는 점에 주목하자.
+# ============================================================
+server:
+  # 클라이언트(step08-mcp-client, 8109)가 이 주소로 접속한다.
+  port: 8108
+
+spring:
+  ai:
+    mcp:
+      server:
+        # 클라이언트에게 자신을 소개할 때 쓰는 서버 이름/버전(핸드셰이크 정보)
+        name: training-mcp-server
+        version: 1.0.0
+
+        # SYNC : 동기 방식(블로킹). WebMVC 스타터와 짝을 이룬다.
+        # 리액티브(WebFlux) 기반이라면 ASYNC를 사용한다.
+        type: SYNC
+
+        # 전송 방식. STREAMABLE(Streamable HTTP)은 현행 MCP 표준 HTTP 전송으로,
+        # 단일 엔드포인트에서 요청/응답과 스트리밍을 함께 처리한다.
+        # (다른 선택지: 로컬 프로세스 간 통신용 STDIO)
+        protocol: STREAMABLE
+
+        annotation-scanner:
+          # true여야 @McpTool이 붙은 메서드를 스캔해 도구로 등록한다.
+          # 이 값을 끄면 TrainingMcpTools가 무시되어 클라이언트에 도구가 하나도 보이지 않는다.
+          enabled: true

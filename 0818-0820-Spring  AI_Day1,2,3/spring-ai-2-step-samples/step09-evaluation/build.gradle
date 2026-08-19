@@ -1,0 +1,17 @@
+dependencies {
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    // 웹 스타터가 없다. 이 모듈은 테스트로만 실행되며 HTTP 서버를 띄우지 않는다.
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-pgvector'
+
+    // Spring AI 2.0: RetrievalAugmentationAdvisor / VectorStoreDocumentRetriever 모듈
+    // STEP 06의 QuestionAnswerAdvisor보다 세분화된 '모듈형 RAG' 구현이 들어 있다.
+    implementation 'org.springframework.ai:spring-ai-rag'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // JUnit 5 + AssertJ(assertThat)를 제공한다. 이 모듈의 핵심 의존성이다.
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

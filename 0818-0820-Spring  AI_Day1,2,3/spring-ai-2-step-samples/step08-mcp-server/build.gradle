@@ -1,0 +1,14 @@
+dependencies {
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    // MCP 서버 스타터(WebMVC/동기 방식).
+    // @McpTool 스캔, 프로토콜 핸드셰이크, HTTP 엔드포인트를 자동 구성한다.
+    implementation 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc'
+
+    // ★ OpenAI 의존성이 없다는 점에 주목.
+    // MCP 서버는 도구를 제공만 하고 LLM을 호출하지 않으므로 API 키도 필요 없다.
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

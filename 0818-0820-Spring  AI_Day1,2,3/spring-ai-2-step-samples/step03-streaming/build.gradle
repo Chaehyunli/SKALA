@@ -1,0 +1,12 @@
+dependencies {
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    // ★ 이 모듈만 webmvc가 아니라 webflux를 쓴다.
+    // 스트리밍 반환 타입인 Flux<String>을 처리하려면 리액티브 스택이 필요하고,
+    // 내장 서버도 톰캣 대신 Netty가 뜬다.
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

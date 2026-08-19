@@ -1,0 +1,15 @@
+dependencies {
+    // Spring AI BOM(Bill of Materials): spring-ai-* 아티팩트들의 버전을 한 번에 맞춰 준다.
+    // 이 선언 덕분에 아래 spring-ai 의존성에 버전을 따로 쓰지 않는다.
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    // 동기(서블릿) 방식 웹 스타터. @RestController와 내장 톰캣을 제공한다.
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    // OpenAI 연동 스타터.
+    // 이것만 넣으면 OpenAiChatModel과 ChatClient.Builder가 자동 구성된다.
+    // 모델 공급자를 바꾸려면 이 줄만 교체한다(예: spring-ai-starter-model-anthropic).
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

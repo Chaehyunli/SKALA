@@ -1,0 +1,17 @@
+dependencies {
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    // Actuator: /actuator/health, /metrics 같은 운영용 엔드포인트를 제공한다.
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Micrometer의 Prometheus 레지스트리.
+    // 이 의존성이 있어야 /actuator/prometheus 엔드포인트가 열리고,
+    // Spring AI가 기록한 지표(gen_ai.*)를 Prometheus 포맷으로 노출한다.
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

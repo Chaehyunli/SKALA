@@ -1,0 +1,10 @@
+dependencies {
+    // @Tool / @ToolParam 및 Tool Calling 실행 루프는 Spring AI 코어 기능이라
+    // 추가 의존성 없이 STEP 01과 동일한 구성으로 동작한다.
+    implementation platform("org.springframework.ai:spring-ai-bom:2.0.0")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

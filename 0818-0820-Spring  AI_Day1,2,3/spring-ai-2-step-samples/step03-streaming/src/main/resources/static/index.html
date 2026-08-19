@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  STEP 03 - 스트리밍 데모 페이지
+
+  src/main/resources/static/ 아래 파일은 Spring Boot가 정적 리소스로 자동 서빙한다.
+  즉 이 파일은 http://localhost:8103/ 로 바로 열린다.
+
+  핵심은 하단 <script>의 EventSource 사용법이다.
+-->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring AI Streaming</title>
+    <style>
+        body { font-family: sans-serif; max-width: 900px; margin: 40px auto; }
+        textarea { width: 100%; min-height: 80px; }
+        /* white-space: pre-wrap → LLM 답변의 줄바꿈과 들여쓰기를 그대로 보여준다 */
+        #answer { white-space: pre-wrap; padding: 16px; border: 1px solid #ddd; margin-top: 16px; }
+    </style>
+</head>
+<body>
+<h1>STEP 03 - Spring AI Streaming</h1>
+<textarea id="message">Spring AI의 ChatClient를 초보자에게 설명해줘.</textarea>
+<button id="send">전송</button>
+<!-- 도착하는 조각을 이어 붙여 표시할 영역 -->
+<div id="answer"></div>
+
+<script>
+document.getElementById("send").addEventListener("click", () => {
+    const message = document.getElementById("message").value;
+    const answer = document.getElementById("answer");
+    // 이전 답변 초기화
+    answer.textContent = "";
+
+    // EventSource : SSE 전용 브라우저 내장 객체.
+    // 생성하는 순간 GET 요청이 나가고, 서버가 연결을 유지한 채 데이터를 밀어 넣는다.
+    // 쿼리스트링에 한글·공백이 들어가므로 encodeURIComponent로 반드시 인코딩한다.
+    const source = new EventSource("/api/chat/stream?message=" + encodeURIComponent(message));
+
+    // 서버가 조각을 보낼 때마다 호출된다. event.data가 텍스트 조각 하나.
+    // += 로 이어 붙이면 타자기처럼 글자가 늘어나는 효과가 난다.
+    source.onmessage = event => {
+        answer.textContent += event.data;
+    };
+
+    // 주의: SSE는 스트림이 끝나도 '정상 종료' 이벤트가 따로 없어 onerror가 호출된다.
+    // close()를 부르지 않으면 EventSource가 자동으로 재연결을 시도해
+    // 같은 질문을 무한히 반복 호출하게 되므로 반드시 닫아준다.
+    source.onerror = () => source.close();
+});
+</script>
+</body>
+</html>
