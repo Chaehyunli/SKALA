@@ -45,7 +45,18 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+    useJUnitPlatform { excludeTags 'live' }   // 실제 외부 API를 호출하는 연동 테스트는 기본 test에서 제외
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = true
+    }
+}
+
+// Finnhub·Frankfurter·Gmail을 실제로 호출하는 연동 테스트 — 필요할 때만 수동 실행: ./gradlew liveTest
+tasks.register('liveTest', Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform { includeTags 'live' }
     testLogging {
         events 'passed', 'failed', 'skipped'
         showStandardStreams = true
