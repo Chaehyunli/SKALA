@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: 13_병목과캐시
+
+  ai:
+    openai:
+      # 키는 소스에 넣지 않는다.  export OPENAI_API_KEY="sk-..."
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-3-small
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    doc-expansion: none
+
+logging:
+  level:
+    com.skala: DEBUG
