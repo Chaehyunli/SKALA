@@ -1,0 +1,13 @@
+# ============================================================
+# STEP 03 - Streaming
+# 이 모듈은 WebFlux(Netty) 기반이라 톰캣이 아닌 Netty가 이 포트를 연다.
+# ============================================================
+server:
+  port: 8103
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        model: gpt-5-mini

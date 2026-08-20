@@ -1,0 +1,30 @@
+# ============================================================
+# STEP 08 (Client) - MCP 클라이언트 설정
+#
+# 주의: MCP 서버(8108)를 먼저 실행한 뒤 이 애플리케이션을 띄운다.
+#       기동 시점에 서버로 접속해 도구 목록을 받아오기 때문이다.
+# ============================================================
+server:
+  port: 8109
+
+spring:
+  ai:
+    # LLM 판단은 클라이언트 쪽에서 이뤄지므로 여기에는 OpenAI 설정이 필요하다.
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        model: gpt-5-mini
+
+    mcp:
+      client:
+        # 서버와 마찬가지로 동기 방식. 서버의 type과 맞춘다.
+        type: SYNC
+
+        # Streamable HTTP로 원격 MCP 서버에 접속한다.
+        streamable-http:
+          connections:
+            # 'training-server'는 이 연결을 구분하기 위한 임의의 별칭이다.
+            # 이 아래에 항목을 추가하면 여러 MCP 서버에 동시 접속할 수 있고,
+            # 모든 서버의 도구가 하나의 ToolCallbackProvider로 합쳐진다.
+            training-server:
+              url: http://localhost:8108

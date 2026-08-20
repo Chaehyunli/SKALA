@@ -1,0 +1,15 @@
+{
+  // F5 로 실행·디버그한다. 키는 여기(실행 설정)에 두면 소스에 커밋되지 않는다.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "7장 실습 · Router 패턴과 자가 채점",
+      "request": "launch",
+      "mainClass": "com.skala.lab7.LabApplication",
+      "projectName": "07_라우터와교정",
+      "vmArgs": "-Dfile.encoding=UTF-8",
+      "env": { "OPENAI_API_KEY": "${env:OPENAI_API_KEY}" }
+    }
+  ]
+}

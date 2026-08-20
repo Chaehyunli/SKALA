@@ -1,0 +1,17 @@
+# ============================================================
+# STEP 05 - Chat Memory
+# 대화 이력은 애플리케이션 메모리(InMemory)에 저장되므로 별도 설정이 없다.
+# 재시작하면 모든 대화 기억이 사라진다.
+#
+# 운영 환경이라면 JDBC/Redis 기반 ChatMemoryRepository로 교체하고
+# 여기에 datasource 설정을 추가하게 된다.
+# ============================================================
+server:
+  port: 8105
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        model: gpt-5-mini

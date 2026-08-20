@@ -1,0 +1,32 @@
+# ============================================================
+# STEP 09 - 평가(Evaluation)
+#
+# 이 모듈은 테스트로만 실행되고 웹 서버를 띄우지 않으므로
+# server.port 설정이 없다.
+#
+# 실행 전: STEP 06의 pgvector 컨테이너가 떠 있어야 한다.
+#   cd step06-rag-pgvector && docker compose up -d
+#   ./gradlew :step09-evaluation:test
+# ============================================================
+spring:
+  # STEP 06과 동일한 벡터 DB를 재사용한다.
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springai
+    username: springai
+    password: springai
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        # 답변 생성과 평가(심판)에 모두 이 모델이 사용된다.
+        # 자기 답변에 후해지는 편향이 걱정된다면 심판용으로 상위 모델을 따로 지정한다.
+        model: gpt-5-mini
+      embedding:
+        model: text-embedding-3-small
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE

@@ -1,0 +1,42 @@
+# ============================================================
+# STEP 10 - Observability (관측 가능성)
+# ============================================================
+server:
+  port: 8110
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        model: gpt-5-mini
+
+    chat:
+      client:
+        observations:
+          # 관측 데이터(트레이스/로그)에 프롬프트와 응답 본문을 포함할지 여부.
+          # 기본값이 false인 이유는 사용자 개인정보가 관측 시스템으로
+          # 그대로 흘러 들어갈 수 있기 때문이다.
+          # 디버깅이 필요할 때만 한시적으로 true로 켠다.
+          log-prompt: false
+          log-completion: false
+
+# ── Actuator: 운영 지표/상태를 HTTP로 노출하는 Spring Boot 모듈 ──
+management:
+  endpoints:
+    web:
+      exposure:
+        # 기본적으로는 health만 열려 있다. 필요한 엔드포인트를 명시적으로 추가한다.
+        #   health     : 애플리케이션 상태 (쿠버네티스 probe 등에 사용)
+        #   info       : 빌드/버전 정보
+        #   metrics    : 수집된 지표 조회 (gen_ai.client.operation 등)
+        #   prometheus : Prometheus가 주기적으로 긁어갈 수 있는 텍스트 포맷
+        #
+        # 주의: 이 엔드포인트들은 내부 정보를 노출하므로
+        # 운영에서는 별도 포트로 분리하거나 인증을 걸어야 한다.
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      # 하위 컴포넌트(디스크, DB 등) 상세까지 보여준다.
+      # 운영에서는 when-authorized 또는 never를 권장한다.
+      show-details: always
