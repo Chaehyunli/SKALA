@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.skala.day3.service.AdminAuthException;
 import com.skala.day3.service.OrderNotFoundException;
+import com.skala.day3.service.TicketNotFoundException;
 import com.skala.day3.web.dto.common.ErrorResponse;
 
 /**
- * 예외를 응답으로 바꾸는 자리는 한 곳이다 — Lab1·Lab2 공통. AI 가 실패해도 화면은 살린다.
+ * 예외를 응답으로 바꾸는 자리는 한 곳이다 — Lab1·Lab2·Lab3 공통. AI 가 실패해도 화면은 살린다.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,6 +24,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrderNotFoundException.class)
     ResponseEntity<ErrorResponse> notFound(OrderNotFoundException e) {
         return ResponseEntity.status(404).body(new ErrorResponse("주문을 찾을 수 없습니다.", null));
+    }
+
+    @ExceptionHandler(TicketNotFoundException.class)
+    ResponseEntity<ErrorResponse> ticketNotFound(TicketNotFoundException e) {
+        return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage(), null));
+    }
+
+    @ExceptionHandler(AdminAuthException.class)
+    ResponseEntity<ErrorResponse> adminAuth(AdminAuthException e) {
+        return ResponseEntity.status(403).body(new ErrorResponse(e.getMessage(), null));
     }
 
     @ExceptionHandler(Exception.class)                     // 모델 오류·타임아웃·인제스트 IO 오류 포함

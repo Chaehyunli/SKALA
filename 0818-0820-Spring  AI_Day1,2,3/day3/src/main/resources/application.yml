@@ -21,6 +21,16 @@ springdoc:
     path: /swagger-ui.html
     doc-expansion: none
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics
+
+app:
+  # Lab3 환불 승인 API 게이트 — 운영 배포 시 반드시 바꿔서 넣는다.
+  admin-key: ${ADMIN_KEY:changeme}
+
 logging:
   level:
     com.skala: DEBUG
