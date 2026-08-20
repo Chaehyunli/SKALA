@@ -66,6 +66,10 @@ public class HelpDeskChatService {
 
     /** SSE 스트리밍용 — 토큰 조각을 그대로 흘려보낸다. 컨트롤러가 SSE 이벤트 모양으로 감싼다. */
     public Flux<ChatClientResponse> stream(String userId, String message, String sessionId) {
+        if (simulatePrimaryFailure) {
+            // 컨트롤러의 onErrorResume이 이 에러를 안내 문구 토큰 이벤트로 바꿔 내보낸다 — ask()의 정적 응답과 동일한 안내.
+            return Flux.error(new IllegalStateException("primary failure simulated"));
+        }
         String conversationId = conversationId(userId, sessionId);
         return helpDeskClient.prompt()
                 .user(message)
