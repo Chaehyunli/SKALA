@@ -1,0 +1,25 @@
+# ============================================================
+# 벡터 DB(pgvector) 로컬 실행용 Compose 파일
+#
+#   docker compose up -d      # 기동
+#   docker compose down       # 중지 (데이터는 볼륨에 남음)
+#   docker compose down -v    # 중지 + 데이터까지 완전 삭제
+#
+# application.yml의 datasource 설정과 반드시 일치해야 한다.
+# ============================================================
+services:
+  pgvector:
+    image: pgvector/pgvector:pg17
+    container_name: helpdesk-pgvector
+    environment:
+      POSTGRES_DB: helpdesk
+      POSTGRES_USER: helpdesk
+      POSTGRES_PASSWORD: helpdesk
+    ports:
+      # 호스트의 5432(로컬 Postgres)·5433(다른 프로젝트 컨테이너)과 겹치지 않게 5434로 매핑한다.
+      - "5434:5432"
+    volumes:
+      - helpdesk-pgdata:/var/lib/postgresql/data
+
+volumes:
+  helpdesk-pgdata:

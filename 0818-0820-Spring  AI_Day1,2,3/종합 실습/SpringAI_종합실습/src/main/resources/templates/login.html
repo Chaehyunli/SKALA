@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>SKALA HelpDesk — 사용자 선택</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 620px; margin: 70px auto; padding: 0 20px; color: #1f2937; }
+    section { border: 1px solid #d1d5db; border-radius: 12px; padding: 22px; margin-top: 18px; }
+    .users { display: flex; gap: 10px; flex-wrap: wrap; }
+    button, input { padding: 10px 14px; border-radius: 7px; border: 1px solid #9ca3af; font-size: 1rem; }
+    button { background: #2563eb; border-color: #2563eb; color: white; cursor: pointer; }
+    form { display: inline-flex; gap: 8px; align-items: center; }
+    .error { color: #b91c1c; }
+    .note { color: #6b7280; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>SKALA HelpDesk AI</h1>
+  <p>해외주식 모의투자 상담을 시작할 사용자를 선택하세요.</p>
+
+  <section>
+    <h2>기본 사용자</h2>
+    <div class="users">
+      <form th:each="user : ${users}" method="post" action="/login">
+        <input type="hidden" name="userId" th:value="${user}">
+        <button type="submit" th:text="${user} + '로 시작'">user1로 시작</button>
+      </form>
+    </div>
+  </section>
+
+  <section>
+    <h2>사용자 추가</h2>
+    <p class="note">영문·숫자·_·- 조합, 3~20자. 실습용 사용자 목록은 서버 재시작 시 초기화됩니다.</p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <form method="post" action="/users">
+      <input name="userId" placeholder="예: user3" maxlength="20" required>
+      <button type="submit">추가하고 시작</button>
+    </form>
+  </section>
+</body>
+</html>

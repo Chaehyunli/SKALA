@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: SpringAI_종합실습
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/helpdesk}
+    username: ${DB_USERNAME:helpdesk}
+    password: ${DB_PASSWORD:helpdesk}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  ai:
+    openai:
+      # 키는 소스에 넣지 않는다.  export OPENAI_API_KEY="sk-..." 또는 .env에 추가
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.2
+      embedding:
+        options:
+          model: text-embedding-3-small
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 1536
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    doc-expansion: none
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics
+  metrics:
+    distribution:
+      percentiles:
+        ai.latency: 0.95
+
+helpdesk:
+  rag:
+    top-k: 5
+    threshold: 0.5
+  memory:
+    max-messages: 20
+  # 신고 규정의 "미화 1만 달러 이상" 기준을 코드에 상수로 박지 않는다.
+  compliance:
+    report-threshold-usd: 10000
+  # 데모용 장애 주입 스위치 — true면 AI 호출 대신 안전한 정적 안내 응답을 반환한다.
+  simulate-primary-failure: false
+
+app:
+  admin-key: ${ADMIN_KEY:changeme}
+
+market:
+  finnhub:
+    api-key: ${FINNHUB_API_KEY:}
+    base-url: https://finnhub.io/api/v1
+  exchange:
+    base-url: https://api.frankfurter.dev/v1
+
+compliance:
+  mail-to: ${COMPLIANCE_MAIL_TO:}
+
+logging:
+  level:
+    com.skala: DEBUG

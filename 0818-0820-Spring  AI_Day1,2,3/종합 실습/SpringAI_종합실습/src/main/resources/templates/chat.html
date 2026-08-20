@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>SKALA HelpDesk — 해외주식 모의투자</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+  header { display: flex; justify-content: space-between; align-items: center; }
+  #log { border: 1px solid #ddd; border-radius: 8px; padding: 12px; min-height: 320px; margin-bottom: 12px; white-space: pre-wrap; }
+  .msg { margin-bottom: 10px; }.user { color: #1a73e8; font-weight: 600; }.assistant { color: #222; }
+  .sources { color: #888; font-size: .85em; margin-top: 2px; } form { display: flex; gap: 8px; }
+  input[type=text] { flex: 1; padding: 8px; } button { padding: 8px 16px; } .logout { margin: 0; }
+</style>
+</head>
+<body th:attr="data-user-id=${#session.getAttribute('helpdesk.userId')}">
+<header>
+  <div><h2>SKALA HelpDesk — 해외주식 모의투자</h2><p>현재 사용자: <strong th:text="${#session.getAttribute('helpdesk.userId')}">user1</strong></p></div>
+  <form class="logout" method="post" action="/logout"><button type="submit">사용자 변경</button></form>
+</header>
+<div id="log"></div>
+<form id="form">
+  <input type="text" id="message" placeholder="예: 애플 10주 사줘 / 제 포트폴리오 보여주세요" autocomplete="off">
+  <button type="submit">전송(SSE)</button>
+</form>
+<script>
+  const log = document.getElementById('log');
+  const form = document.getElementById('form');
+  const userId = document.body.dataset.userId;
+  function append(role, text) { const div = document.createElement('div'); div.className = 'msg'; div.innerHTML = `<span class="${role}">${role === 'user' ? '나' : 'HelpDesk'}</span>: `; const span = document.createElement('span'); span.textContent = text; div.appendChild(span); log.appendChild(div); log.scrollTop = log.scrollHeight; return span; }
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); const messageInput = document.getElementById('message'); const message = messageInput.value.trim(); if (!message) return;
+    append('user', message); messageInput.value = ''; const answerSpan = append('assistant', '');
+    const res = await fetch('/api/chat/stream', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, message }) });
+    if (!res.ok) { answerSpan.textContent = '요청 처리에 실패했습니다.'; return; }
+    const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer = '';
+    while (true) { const { done, value } = await reader.read(); if (done) break; buffer += decoder.decode(value, { stream: true }); const events = buffer.split('\n\n'); buffer = events.pop();
+      for (const raw of events) { const lines = raw.split('\n'); const eventLine = lines.find(l => l.startsWith('event:')); const dataLine = lines.find(l => l.startsWith('data:')); if (!dataLine) continue; const data = dataLine.slice(5).trim();
+        if (eventLine && eventLine.includes('sources')) { const sources = JSON.parse(data); if (sources.length) { const src = document.createElement('div'); src.className = 'sources'; src.textContent = '출처: ' + sources.map(s => s.document).join(', '); answerSpan.parentElement.appendChild(src); } }
+        else { answerSpan.textContent += data; }
+      }
+    }
+  });
+</script>
+</body>
+</html>
