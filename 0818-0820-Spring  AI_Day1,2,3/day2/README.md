@@ -40,8 +40,7 @@ Swagger UI — <http://localhost:8080/swagger-ui.html>
 
 ```
 config/
-  Lab1AiConfig.java          — 요약 전용 ChatClient 빈 (온도 0, maxTokens 120)
-  Lab2AiConfig.java          — 근거 답변 전용 ChatClient 빈 (온도 0, 거절·인용 지시)
+  AiConfig.java              — lab1SummaryChatClient, lab2AskChatClient 빈 (용도별 온도·토큰 상한 고정)
   Lab2VectorStoreConfig.java — 인메모리 VectorStore 빈
 domain/
   Order.java, OrderStatus.java
@@ -51,9 +50,14 @@ service/
   Lab2RetrieveService.java   — 검색 로직 (컨트롤러·Ask 서비스가 공유)
   Lab2AskService.java        — 근거 없으면 모델 호출 스킵, 있으면 구조화 출력으로 답변
 web/
-  controller/  — OrderSummaryController, Lab2IngestController, Lab2RetrieveController, Lab2AskController
-  dto/         — SummaryResponse, ErrorResponse, IngestResult, Chunk, AskRequest, AnswerDto
-  exception/   — Lab1ExceptionHandler (예외 → 응답 변환은 한 곳)
+  controller/  — Lab1Controller, Lab2Controller (인제스트·검색·답변 3개 엔드포인트)
+  dto/
+    common/    — ErrorResponse
+    lab1/response/ — SummaryResponse
+    lab2/          — Chunk
+    lab2/request/  — AskRequest
+    lab2/response/ — AnswerDto, IngestResult
+  exception/   — GlobalExceptionHandler (예외 → 응답 변환은 한 곳, Lab1·Lab2 공통)
 resources/
   lab2-docs/   — return-policy.md, shipping-policy.md, membership.md, golden.json
 ```

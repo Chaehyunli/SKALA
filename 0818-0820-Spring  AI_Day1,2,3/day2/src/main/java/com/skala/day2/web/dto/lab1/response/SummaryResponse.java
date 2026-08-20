@@ -1,4 +1,4 @@
-package com.skala.day2.web.dto;
+package com.skala.day2.web.dto.lab1.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.skala.day2.service.OrderSummaryService;
-import com.skala.day2.web.dto.SummaryResponse;
+import com.skala.day2.web.dto.lab1.response.SummaryResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,11 +23,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/lab1/orders")
 @Tag(name = "Day1 실습 · 주문 요약")
-public class OrderSummaryController {
+public class Lab1Controller {
 
     private final OrderSummaryService service;   // ← ChatClient 는 여기 없다
 
-    public OrderSummaryController(OrderSummaryService service) {
+    public Lab1Controller(OrderSummaryService service) {
         this.service = service;
     }
 

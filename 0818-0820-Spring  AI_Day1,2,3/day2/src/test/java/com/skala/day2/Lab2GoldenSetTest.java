@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skala.day2.service.Lab2AskService;
 import com.skala.day2.service.Lab2IngestService;
-import com.skala.day2.web.dto.AnswerDto;
+import com.skala.day2.web.dto.lab2.response.AnswerDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;

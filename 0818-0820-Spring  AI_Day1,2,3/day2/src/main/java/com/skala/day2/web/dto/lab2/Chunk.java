@@ -1,4 +1,4 @@
-package com.skala.day2.web.dto;
+package com.skala.day2.web.dto.lab2;
 
 /**
  * 검색 API(GET /lab2/retrieve) 응답 한 건 — 근거 청크 하나를 눈으로 확인하기 위한 형태.

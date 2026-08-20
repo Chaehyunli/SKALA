@@ -1,6 +1,6 @@
 package com.skala.day2.service;
 
-import com.skala.day2.web.dto.AnswerDto;
+import com.skala.day2.web.dto.lab2.response.AnswerDto;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +22,7 @@ public class Lab2AskService {
     private final ChatClient askChatClient;
 
     public Lab2AskService(Lab2RetrieveService retrieveService,
-                           @Qualifier("askChatClient") ChatClient askChatClient) {
+                           @Qualifier("lab2AskChatClient") ChatClient askChatClient) {
         this.retrieveService = retrieveService;
         this.askChatClient = askChatClient;
     }

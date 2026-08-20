@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.skala.day2.domain.Order;
 import com.skala.day2.repository.OrderRepository;
-import com.skala.day2.web.dto.SummaryResponse;
+import com.skala.day2.web.dto.lab1.response.SummaryResponse;
 
 /**
  * 업무 흐름은 여기. 주문을 못 찾으면 모델을 부르지 않는다.
@@ -18,9 +18,9 @@ public class OrderSummaryService {
     private final OrderRepository orders;          // 1장에서 만든 계층을 그대로
     private final ChatClient summaryChat;
 
-    public OrderSummaryService(OrderRepository orders, ChatClient summaryChatClient) {
+    public OrderSummaryService(OrderRepository orders, ChatClient lab1SummaryChatClient) {
         this.orders = orders;
-        this.summaryChat = summaryChatClient;
+        this.summaryChat = lab1SummaryChatClient;
     }
 
     public SummaryResponse summarize(String orderId, String userId) {
