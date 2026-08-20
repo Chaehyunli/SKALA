@@ -3,6 +3,7 @@ package com.skala.helpdesk;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * 종합 실습 · SKALA HelpDesk AI — 해외주식 모의투자 상담 에이전트.
@@ -13,6 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan
+@EnableAsync   // ComplianceMailService.notify()가 SMTP 전송으로 매수 체결 응답을 지연시키지 않도록 비동기 실행한다.
 public class HelpDeskApplication {
 
     public static void main(String[] args) {

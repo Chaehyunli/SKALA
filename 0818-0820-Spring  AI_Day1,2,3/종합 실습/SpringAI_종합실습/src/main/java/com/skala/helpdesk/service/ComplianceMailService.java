@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  *
  * <p>메일 발송은 매수 흐름의 부가 기능이다 — SMTP 설정이 비어 있거나 실패해도
  * 매수 자체(주 업무 흐름)를 막으면 안 되므로 예외를 삼키고 로그만 남긴다.
+ * {@code @Async}로 별도 스레드에서 보내 SMTP 지연이 매수 체결(도구 호출) 응답을 막지 않게 한다.
  */
 @Service
 public class ComplianceMailService {
@@ -32,6 +34,7 @@ public class ComplianceMailService {
         this.to = to;
     }
 
+    @Async
     public void notify(ComplianceTicket ticket) {
         if (to.isBlank() || from.isBlank()) {
             log.info("MAIL_USERNAME/COMPLIANCE_MAIL_TO 미설정 — 신고 메일 발송을 건너뜁니다. ticket={}", ticket.no());
