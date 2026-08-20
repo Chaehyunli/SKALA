@@ -1,6 +1,5 @@
 package com.skala.helpdesk.tool;
 
-import com.skala.helpdesk.domain.ComplianceTicket;
 import com.skala.helpdesk.domain.Holding;
 import com.skala.helpdesk.domain.Portfolio;
 import com.skala.helpdesk.market.ExchangeRate;
@@ -9,13 +8,10 @@ import com.skala.helpdesk.market.StockQuote;
 import com.skala.helpdesk.repository.ComplianceTicketRepository;
 import com.skala.helpdesk.repository.PortfolioRepository;
 import com.skala.helpdesk.service.ComplianceMailService;
-import com.skala.helpdesk.service.ToolUsageTracker;
+import com.skala.helpdesk.service.ToolCallRecorder;
 import com.skala.helpdesk.web.dto.portfolio.HoldingView;
 import com.skala.helpdesk.web.dto.portfolio.PortfolioView;
 import com.skala.helpdesk.web.dto.portfolio.TradeResultView;
-import io.micrometer.core.instrument.MeterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
@@ -35,29 +31,24 @@ import java.util.List;
 @Component
 public class PortfolioTools {
 
-    private static final Logger log = LoggerFactory.getLogger(PortfolioTools.class);
-
     private final PortfolioRepository portfolios;
     private final ComplianceTicketRepository tickets;
     private final ComplianceMailService mailService;
     private final PriceService priceService;
-    private final MeterRegistry meterRegistry;
-    private final ToolUsageTracker usageTracker;
+    private final ToolCallRecorder recorder;
     private final double reportThresholdUsd;
 
     public PortfolioTools(PortfolioRepository portfolios,
                            ComplianceTicketRepository tickets,
                            ComplianceMailService mailService,
                            PriceService priceService,
-                           MeterRegistry meterRegistry,
-                           ToolUsageTracker usageTracker,
+                           ToolCallRecorder recorder,
                            @Value("${helpdesk.compliance.report-threshold-usd}") double reportThresholdUsd) {
         this.portfolios = portfolios;
         this.tickets = tickets;
         this.mailService = mailService;
         this.priceService = priceService;
-        this.meterRegistry = meterRegistry;
-        this.usageTracker = usageTracker;
+        this.recorder = recorder;
         this.reportThresholdUsd = reportThresholdUsd;
     }
 
@@ -66,9 +57,7 @@ public class PortfolioTools {
             '내 포트폴리오', '보유 주식', '잔고 얼마야' 같은 질문에 쓴다.
             """)
     public PortfolioView getPortfolio(ToolContext context) {
-        boolean ok = false;
-        try {
-            usageTracker.markUsed();
+        return recorder.execute("getPortfolio", () -> {
             Portfolio portfolio = portfolios.findOrCreate(userId(context));
             List<HoldingView> views = portfolio.holdings().values().stream()
                     .map(this::toHoldingView)
@@ -76,12 +65,8 @@ public class PortfolioTools {
             double totalStockUsd = views.stream().mapToDouble(HoldingView::valuationUsd).sum();
             double fx = totalStockUsd > 0 ? priceService.getRate("USD", "KRW").rate() : 0;
             double totalValuationKrw = portfolio.cashKrw() + totalStockUsd * fx;
-            PortfolioView view = new PortfolioView(portfolio.cashKrw(), views, totalValuationKrw);
-            ok = true;
-            return view;
-        } finally {
-            recordCall("getPortfolio", ok);
-        }
+            return new PortfolioView(portfolio.cashKrw(), views, totalValuationKrw);
+        });
     }
 
     @Tool(description = """
@@ -92,9 +77,7 @@ public class PortfolioTools {
     public TradeResultView buyStock(@ToolParam(description = "종목 코드. 예: AAPL") String symbol,
                                      @ToolParam(description = "매수 수량(주)") int quantity,
                                      ToolContext context) {
-        boolean ok = false;
-        try {
-            usageTracker.markUsed();
+        return recorder.execute("buyStock", () -> {
             requirePositive(quantity);
             String userId = userId(context);
             StockQuote quote = priceService.getQuote(symbol);
@@ -104,12 +87,9 @@ public class PortfolioTools {
             double amountKrw = quantity * quote.priceUsd() * fx.rate();
 
             String ticketNo = maybeCreateComplianceTicket(userId, updated);
-            ok = true;
             return new TradeResultView("BUY", quote.symbol(), quantity, quote.priceUsd(), fx.rate(),
                     amountKrw, updated.cashKrw(), ticketNo);
-        } finally {
-            recordCall("buyStock", ok);
-        }
+        });
     }
 
     @Tool(description = """
@@ -119,9 +99,7 @@ public class PortfolioTools {
     public TradeResultView sellStock(@ToolParam(description = "종목 코드. 예: AAPL") String symbol,
                                       @ToolParam(description = "매도 수량(주)") int quantity,
                                       ToolContext context) {
-        boolean ok = false;
-        try {
-            usageTracker.markUsed();
+        return recorder.execute("sellStock", () -> {
             requirePositive(quantity);
             String userId = userId(context);
             StockQuote quote = priceService.getQuote(symbol);
@@ -130,14 +108,12 @@ public class PortfolioTools {
             Portfolio updated = portfolios.update(userId, p -> p.sell(quote.symbol(), quantity, quote.priceUsd(), fx.rate()));
             double amountKrw = quantity * quote.priceUsd() * fx.rate();
 
-            ok = true;
             return new TradeResultView("SELL", quote.symbol(), quantity, quote.priceUsd(), fx.rate(),
                     amountKrw, updated.cashKrw(), null);
-        } finally {
-            recordCall("sellStock", ok);
-        }
+        });
     }
 
+    /** userId 별로 원자적으로 생성되므로(ComplianceTicketRepository) 동시 매수에도 중복 티켓·중복 메일이 생기지 않는다. */
     private String maybeCreateComplianceTicket(String userId, Portfolio updated) {
         double valuationUsd = updated.holdings().values().stream()
                 .mapToDouble(holding -> holding.quantity() * priceService.getQuote(holding.symbol()).priceUsd())
@@ -145,13 +121,11 @@ public class PortfolioTools {
         if (valuationUsd < reportThresholdUsd) {
             return null;
         }
-        var existing = tickets.findPendingByUserId(userId);
-        if (existing.isPresent()) {
-            return existing.get().no();
+        var result = tickets.createPendingIfAbsent(userId, "PORTFOLIO", valuationUsd);
+        if (result.created()) {
+            mailService.notify(result.ticket());
         }
-        ComplianceTicket ticket = tickets.create(userId, "PORTFOLIO", valuationUsd);
-        mailService.notify(ticket);
-        return ticket.no();
+        return result.ticket().no();
     }
 
     private HoldingView toHoldingView(Holding holding) {
@@ -168,11 +142,5 @@ public class PortfolioTools {
 
     private String userId(ToolContext context) {
         return (String) context.getContext().get("userId");
-    }
-
-    private void recordCall(String tool, boolean ok) {
-        String result = ok ? "ok" : "fail";
-        meterRegistry.counter("ai.tool.calls", "tool", tool, "result", result).increment();
-        log.info("tool={} result={}", tool, result);
     }
 }

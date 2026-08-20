@@ -2,10 +2,7 @@ package com.skala.helpdesk.tool;
 
 import com.skala.helpdesk.market.ExchangeRate;
 import com.skala.helpdesk.market.PriceService;
-import com.skala.helpdesk.service.ToolUsageTracker;
-import io.micrometer.core.instrument.MeterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.skala.helpdesk.service.ToolCallRecorder;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Component;
@@ -14,16 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExchangeRateTools {
 
-    private static final Logger log = LoggerFactory.getLogger(ExchangeRateTools.class);
-
     private final PriceService priceService;
-    private final MeterRegistry meterRegistry;
-    private final ToolUsageTracker usageTracker;
+    private final ToolCallRecorder recorder;
 
-    public ExchangeRateTools(PriceService priceService, MeterRegistry meterRegistry, ToolUsageTracker usageTracker) {
+    public ExchangeRateTools(PriceService priceService, ToolCallRecorder recorder) {
         this.priceService = priceService;
-        this.meterRegistry = meterRegistry;
-        this.usageTracker = usageTracker;
+        this.recorder = recorder;
     }
 
     @Tool(description = """
@@ -32,16 +25,6 @@ public class ExchangeRateTools {
             """)
     public ExchangeRate getRate(@ToolParam(description = "기준 통화 코드. 예: USD") String base,
                                  @ToolParam(description = "대상 통화 코드. 예: KRW") String quote) {
-        boolean ok = false;
-        try {
-            usageTracker.markUsed();
-            ExchangeRate rate = priceService.getRate(base, quote);
-            ok = true;
-            return rate;
-        } finally {
-            String result = ok ? "ok" : "fail";
-            meterRegistry.counter("ai.tool.calls", "tool", "getRate", "result", result).increment();
-            log.info("tool=getRate result={}", result);
-        }
+        return recorder.execute("getRate", () -> priceService.getRate(base, quote));
     }
 }
