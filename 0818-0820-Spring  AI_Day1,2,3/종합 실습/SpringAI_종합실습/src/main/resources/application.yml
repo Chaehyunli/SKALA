@@ -54,10 +54,6 @@ management:
     web:
       exposure:
         include: metrics
-  metrics:
-    distribution:
-      percentiles:
-        ai.latency: 0.95
 
 helpdesk:
   rag:

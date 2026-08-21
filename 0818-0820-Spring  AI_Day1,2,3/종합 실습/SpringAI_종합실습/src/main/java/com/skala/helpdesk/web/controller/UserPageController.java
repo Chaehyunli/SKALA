@@ -23,9 +23,9 @@ public class UserPageController {
     }
 
     @GetMapping("/")
-    public String home(HttpSession session) {
+    public String home(HttpSession session, Model model) {
         try {
-            userSessionService.currentUserId(session);
+            model.addAttribute("userId", userSessionService.currentUserId(session));
             return "chat";
         } catch (Exception ignored) {
             return "redirect:/login";

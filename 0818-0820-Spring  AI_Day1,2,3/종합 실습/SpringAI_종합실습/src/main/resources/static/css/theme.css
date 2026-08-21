@@ -1,0 +1,84 @@
+/* SKALA HelpDesk 공통 테마 — 스타트업 피치 무드(YC·초기 Airbnb): 여백 넉넉하게, 강조는 accent 한 색만 */
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
+  font-weight: 45 920;
+}
+
+:root {
+  --bg: #fff;
+  --text: #111;
+  --accent: #6366f1;
+  --accent-weak: #eef0fe;
+  --border: #e5e7eb;
+  --muted: #6b7280;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+h1, h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* "We are changing X" 톤 — 페이지 최상단 한 문장을 크고 굵게 */
+.headline {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 4px;
+}
+.headline .accent { color: var(--accent); }
+
+.subtext { color: var(--muted); margin: 0; }
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+button, .btn {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: opacity .15s ease;
+}
+button:hover, .btn:hover { opacity: .88; }
+
+button.secondary, .btn.secondary {
+  background: var(--accent-weak);
+  color: var(--accent);
+}
+
+input[type=text] {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.tag {
+  display: inline-block;
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-size: .8rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}

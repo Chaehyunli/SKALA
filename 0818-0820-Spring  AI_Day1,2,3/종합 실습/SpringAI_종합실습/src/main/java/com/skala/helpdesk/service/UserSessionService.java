@@ -40,4 +40,17 @@ public class UserSessionService {
         }
         return current;
     }
+
+    public String deriveSessionId(String userId) {
+        return userId + "-session";
+    }
+
+    /** 요청의 sessionId가 없으면 채워주고, 있으면 로그인한 사용자 것과 일치하는지 검증한다. */
+    public String requireOwnSessionId(HttpSession session, String requestedSessionId) {
+        String expected = deriveSessionId(currentUserId(session));
+        if (requestedSessionId != null && !requestedSessionId.isBlank() && !requestedSessionId.equals(expected)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 세션이 아닙니다.");
+        }
+        return expected;
+    }
 }

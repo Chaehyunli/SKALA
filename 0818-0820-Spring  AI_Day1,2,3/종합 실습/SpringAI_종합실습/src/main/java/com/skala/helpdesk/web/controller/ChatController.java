@@ -47,7 +47,9 @@ public class ChatController {
     @PostMapping
     @Operation(summary = "동기 채팅", description = "규정 질문·시세 조회·매수/매도를 한 번에 처리하고 구조화된 응답을 반환한다.")
     public AnswerDto ask(@Valid @RequestBody AskRequest request, HttpSession session) {
-        return chatService.ask(userId(session, request.userId()), request.message(), request.sessionId());
+        String userId = userId(session, request.userId());
+        String sessionId = userSessionService.requireOwnSessionId(session, request.sessionId());
+        return chatService.ask(userId, request.message(), sessionId);
     }
 
     @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -59,7 +61,8 @@ public class ChatController {
         // 청크에 따라 getResult()/getOutput()/getText()가 null일 수 있어 map 대신 handle로 null은 그냥 건너뛴다
         // (Reactor의 map은 null 반환을 허용하지 않아 그 상태로 두면 NullPointerException으로 스트림이 죽는다).
         String userId = userId(session, request.userId());
-        Flux<ServerSentEvent<String>> tokens = chatService.stream(userId, request.message(), request.sessionId())
+        String sessionId = userSessionService.requireOwnSessionId(session, request.sessionId());
+        Flux<ServerSentEvent<String>> tokens = chatService.stream(userId, request.message(), sessionId)
                 .doOnNext(chunk -> {
                     var sources = chatService.sourcesOf(chunk);
                     if (!sources.isEmpty()) {
@@ -86,7 +89,9 @@ public class ChatController {
     public List<ChatMessageView> history(@RequestParam String userId,
                                           HttpSession session,
                                           @RequestParam(required = false) String sessionId) {
-        return chatService.history(userId(session, userId), sessionId);
+        String verifiedUserId = userId(session, userId);
+        String verifiedSessionId = userSessionService.requireOwnSessionId(session, sessionId);
+        return chatService.history(verifiedUserId, verifiedSessionId);
     }
 
     private String textOf(ChatClientResponse chunk) {
