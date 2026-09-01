@@ -1,0 +1,34 @@
+# Used by default when Enrollment service runs directly on a developer machine.
+spring:
+  config:
+    import: optional:file:../.env[.properties]
+  datasource:
+    url: jdbc:mariadb://localhost:3379/lecture_db
+    username: ${MYSQL_USER:manager}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+          issuer-uri: http://localhost:9000
+  kafka:
+    bootstrap-servers: localhost:9092
+    admin:
+      auto-create: false
+    listener:
+      auto-startup: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+service:
+  course-service:
+    url: http://localhost:8082
+  payment-service:
+    url: http://localhost:8084

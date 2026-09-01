@@ -1,0 +1,139 @@
+# Meeting Coordinator Agent 권한 파일
+
+agent: MEETING_COORDINATOR
+name: Meeting Coordinator Agent
+task: 일정 조회·회의 준비
+selectable: true
+description: >
+  참석자들의 일정을 조회해 가능한 시간을 찾고, 회의 안건과 사전 준비
+  자료를 정리한다. 확정된 일정을 캘린더에 등록할 수도 있다.
+typicalTasks:
+  - 참석자 공통 가능 시간 확인
+  - 회의 안건 정리
+  - 확정 일정 캘린더 등록
+  - 회의 참석자에게 사전 자료 공유
+
+groups:
+
+  CALENDAR:
+    displayName: 일정
+    description: 캘린더 조회와 일정 등록·변경·취소에 관한 권한
+    permissions:
+
+      CALENDAR_READ:
+        label: 일정 조회
+        description: >
+          본인 및 사내 구성원의 일정 제목, 시간, 참석자를 읽는다.
+          일정을 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      CALENDAR_FREEBUSY_READ:
+        label: 가능 시간 조회
+        description: >
+          구성원의 일정 제목을 제외하고 바쁨·한가함 상태만 읽는다.
+          일정 내용이 노출되지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      CALENDAR_EVENT_CREATE:
+        label: 일정 생성
+        description: >
+          캘린더에 새 일정을 등록하고 참석자에게 초대를 발송한다.
+          외부 참석자에게도 알림이 전달되므로 사후 취소해도 흔적이 남는다.
+        risk: HIGH
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 4
+
+      CALENDAR_EVENT_UPDATE:
+        label: 일정 변경
+        description: >
+          기존 일정의 시간이나 참석자를 변경한다. 변경 알림이 참석자
+          전원에게 발송된다.
+        risk: HIGH
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 4
+
+      CALENDAR_EVENT_DELETE:
+        label: 일정 취소
+        description: >
+          등록된 일정을 취소하고 참석자에게 취소 알림을 발송한다.
+          취소된 일정은 복구되지 않는다.
+        risk: CRITICAL
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 2
+
+  MEETING:
+    displayName: 회의 자료
+    description: 회의록과 안건 자료의 조회·작성에 관한 권한
+    permissions:
+
+      MEETING_NOTE_READ:
+        label: 회의록 조회
+        description: >
+          지난 회의의 회의록과 결정 사항을 읽는다.
+          회의록을 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      MEETING_AGENDA_CREATE:
+        label: 회의 안건 작성
+        description: >
+          회의 안건을 초안 상태로 작성한다. 참석자에게 자동으로
+          공유되지 않으며 주최자가 검토 후 배포한다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+  ROOM:
+    displayName: 회의실
+    description: 회의실 조회와 예약에 관한 권한
+    permissions:
+
+      ROOM_AVAILABILITY_READ:
+        label: 회의실 예약 현황 조회
+        description: >
+          회의실별 예약 현황과 수용 인원을 읽는다.
+          예약을 생성하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      ROOM_RESERVE:
+        label: 회의실 예약
+        description: >
+          회의실을 예약한다. 동일 시간대 다른 예약을 차단하므로
+          타 부서 일정에 영향을 준다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 8

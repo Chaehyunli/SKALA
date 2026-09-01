@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Java / Gradle
+**/.gradle/
+**/build/
+**/bin/
+*.class
+*.jar
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# Node / Vue
+**/node_modules/
+**/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Runtime output
+*.log
+logs/
+
+# Docker image archives are distributed separately
+*.tar
+*.tar.gz

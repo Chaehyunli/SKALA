@@ -1,0 +1,127 @@
+{
+  "courseId": 12,
+  "agentList": [
+    {
+      "agentCode": "REVENUE_ANALYST",
+      "permissions": [
+        {
+          "code": "CUSTOMER_READ",
+          "name": "CRM 고객정보 조회",
+          "reason": "이탈 판단을 위해 고객의 계약 상태와 최근 활동 이력이 필요합니다."
+        },
+        {
+          "code": "CUSTOMER_SEGMENT_READ",
+          "name": "고객 세그먼트 조회",
+          "reason": "고객 등급과 이탈 위험도 지표를 확인하기 위해 필요합니다."
+        },
+        {
+          "code": "REVENUE_READ",
+          "name": "매출 데이터 조회",
+          "reason": "고객별 매출 추이를 분석하기 위해 필요합니다."
+        },
+        {
+          "code": "ANALYSIS_REPORT_CREATE",
+          "name": "분석 리포트 작성",
+          "reason": "분석 결과를 리포트 초안으로 정리하기 위해 필요합니다."
+        }
+      ],
+      "excludedPermissions": [
+        {
+          "code": "CUSTOMER_UPDATE",
+          "reason": "분석 업무이므로 고객 데이터를 변경할 필요가 없습니다."
+        },
+        {
+          "code": "CUSTOMER_DELETE",
+          "reason": "삭제가 업무에 요구되지 않았으며 복구가 불가능합니다."
+        },
+        {
+          "code": "CUSTOMER_EXPORT",
+          "reason": "사내 분석으로 충분하며 개인정보 사외 반출 요구가 없습니다."
+        },
+        {
+          "code": "REVENUE_FORECAST_READ",
+          "reason": "과거 실적 분석이 목적이며 예측 데이터는 필요하지 않습니다."
+        },
+        {
+          "code": "REVENUE_EXPORT",
+          "reason": "파일 반출이 업무에 요구되지 않았습니다."
+        }
+      ]
+    },
+    {
+      "agentCode": "CUSTOMER_SUPPORT",
+      "permissions": [
+        {
+          "code": "SUPPORT_TICKET_READ",
+          "name": "고객 문의 조회",
+          "reason": "이탈 사유를 파악하기 위해 최근 문의 내역이 필요합니다."
+        },
+        {
+          "code": "CUSTOMER_READ",
+          "name": "CRM 고객정보 조회",
+          "reason": "문의자와 분석 대상 고객을 대조하기 위해 필요합니다."
+        }
+      ],
+      "excludedPermissions": [
+        {
+          "code": "SUPPORT_REPLY_DRAFT",
+          "reason": "문의 응대가 아닌 분석 업무이므로 답변 작성이 필요하지 않습니다."
+        },
+        {
+          "code": "SUPPORT_TICKET_UPDATE",
+          "reason": "문의 상태를 변경할 필요가 없으며 고객에게 알림이 전달됩니다."
+        },
+        {
+          "code": "SUPPORT_REPLY_SEND",
+          "reason": "고객 응대 발송은 요청된 업무 범위를 초과합니다."
+        },
+        {
+          "code": "KNOWLEDGE_READ",
+          "reason": "응대 가이드 참조가 업무에 필요하지 않습니다."
+        },
+        {
+          "code": "KNOWLEDGE_ARTICLE_CREATE",
+          "reason": "지식베이스 문서 등록이 업무에 요구되지 않았습니다."
+        }
+      ]
+    },
+    {
+      "agentCode": "COMMON_AGENT",
+      "permissions": [
+        {
+          "code": "MAIL_DRAFT_CREATE",
+          "name": "이메일 초안 작성",
+          "reason": "이탈 위험 고객에게 보낼 이메일 초안을 작성하기 위해 필요합니다."
+        }
+      ],
+      "excludedPermissions": [
+        {
+          "code": "MAIL_READ",
+          "reason": "초안 작성만 필요하며 기존 메일 열람은 요구되지 않았습니다."
+        },
+        {
+          "code": "MAIL_SEND",
+          "reason": "직접 발송은 요청된 업무 범위를 초과합니다."
+        },
+        {
+          "code": "MAIL_DELETE",
+          "reason": "메일 삭제가 업무에 요구되지 않았습니다."
+        },
+        {
+          "code": "MESSENGER_READ",
+          "reason": "사내 대화 내용 확인이 업무에 필요하지 않습니다."
+        },
+        {
+          "code": "MESSENGER_SEND",
+          "reason": "사내 채널 전파가 업무에 포함되지 않았습니다."
+        },
+        {
+          "code": "DIRECTORY_READ",
+          "reason": "사내 구성원 정보 조회가 업무에 필요하지 않습니다."
+        }
+      ]
+    }
+  ],
+  "riskLevel": "MEDIUM",
+  "summary": "이탈 가능성이 높은 고객을 매출·문의 데이터로 분석하고 이메일 초안까지 작성하는 업무입니다."
+}

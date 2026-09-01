@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://lecturedb:3306/lecture_db
+    username: ${MYSQL_USER:manager}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://auth-server:9000/oauth2/jwks
+          issuer-uri: http://auth-server:9000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+service:
+  user-service:
+    url: http://user-service:8081

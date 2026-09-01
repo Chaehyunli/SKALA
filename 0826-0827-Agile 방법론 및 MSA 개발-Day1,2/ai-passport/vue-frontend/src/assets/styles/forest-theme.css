@@ -1,0 +1,660 @@
+/* Compact light dashboard theme */
+
+:root {
+  --forest-canvas: #f3f3f3;
+  --forest-surface: #ffffff;
+  --forest-subtle: #f7f7f7;
+  --forest-primary: #483bff;
+  --forest-primary-dark: #3529d9;
+  --forest-primary-soft: #eeecff;
+  --forest-text: #171a18;
+  --forest-text-secondary: #747474;
+  --forest-text-muted: #a0a0a0;
+  --forest-border: #e8e8e8;
+  --forest-border-strong: #d5d5d5;
+  --forest-shadow: 0 8px 24px rgba(25, 25, 25, 0.06);
+}
+
+body,
+#app {
+  background: #fff;
+}
+
+/* Application chrome */
+.agent-shell {
+  color: var(--forest-text) !important;
+  background: #fff !important;
+}
+
+.top-header {
+  background: #fff !important;
+  border-color: transparent !important;
+  box-shadow: none;
+}
+
+.brand-name,
+.profile-summary,
+.header-icon-button,
+.mobile-trigger {
+  color: var(--forest-text) !important;
+}
+
+.profile-team,
+.notification-heading span,
+.notification-item span,
+.notification-item time,
+.notification-empty {
+  color: var(--forest-text-secondary) !important;
+}
+
+.profile-avatar {
+  color: var(--forest-primary-dark) !important;
+  background: var(--forest-primary-soft) !important;
+  border-color: #d8d4ff !important;
+}
+
+.profile-avatar-button:focus-visible {
+  outline-color: var(--forest-primary) !important;
+}
+
+.sidebar {
+  background: #f7f7f7 !important;
+  border-color: transparent !important;
+}
+
+.side-menu,
+.side-menu.ant-menu-light {
+  color: var(--forest-text-secondary) !important;
+  background: transparent !important;
+}
+
+.side-menu .ant-menu-item {
+  color: var(--forest-text-secondary) !important;
+}
+
+.side-menu .ant-menu-item:hover {
+  color: var(--forest-primary-dark) !important;
+  background: #f2f1ff !important;
+}
+
+.side-menu .ant-menu-item-selected {
+  color: var(--forest-primary-dark) !important;
+  background: var(--forest-primary-soft) !important;
+}
+
+.credit-card {
+  color: #fff !important;
+  background: var(--forest-primary-dark) !important;
+  border-color: rgba(72, 59, 255, 0.18) !important;
+  box-shadow: none;
+}
+
+.credit-card p,
+.credit-card strong {
+  color: #fff !important;
+}
+
+.credit-card p { opacity: 0.76; }
+.credit-card button { color: #dcd9ff !important; }
+.credit-card button:hover { color: #fff !important; }
+
+.notification-menu,
+.notification-heading,
+.notification-item,
+.notification-heading strong {
+  color: var(--forest-text) !important;
+}
+
+.notification-heading { border-color: var(--forest-border) !important; }
+
+.mobile-navigation .ant-drawer-content,
+.mobile-navigation .ant-drawer-body {
+  background: var(--forest-subtle) !important;
+}
+
+.content-surface::-webkit-scrollbar { width: 5px; }
+.content-surface::-webkit-scrollbar-track { background: transparent; }
+.content-surface::-webkit-scrollbar-thumb { background: #d3d3d3; border-radius: 999px; }
+.content-surface::-webkit-scrollbar-thumb:hover { background: #bdbdbd; }
+
+/* Shared page typography */
+.work-page,
+.passport-page,
+.passport-detail-page,
+.credits-page,
+.admin-page,
+.detail-page,
+.content-page {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+.eyebrow {
+  color: var(--forest-primary) !important;
+}
+
+.page-heading h1,
+.detail-heading h1,
+.content-page > h1,
+.content-page h1 {
+  color: var(--forest-text) !important;
+  font-size: clamp(26px, 2.4vw, 32px) !important;
+  letter-spacing: -0.045em !important;
+}
+
+.description,
+.hint,
+.panel-footer,
+.loading-state,
+.empty-state {
+  color: var(--forest-text-secondary) !important;
+}
+
+.description { font-size: 13px !important; }
+.eyebrow { font-size: 10px !important; letter-spacing: .12em !important; }
+
+/* Surfaces */
+:where(
+  .summary-card,
+  .admin-panel,
+  .request-panel,
+  .passport-panel,
+  .form-card,
+  .detail-card,
+  .steps-card,
+  .permission-card,
+  .passport-overview,
+  .overview-card,
+  .side-card,
+  .balance-card,
+  .purchase-card,
+  .action-card
+) {
+  color: var(--forest-text) !important;
+  background: var(--forest-surface) !important;
+  border-color: #e8ece9 !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+.summary-grid .summary-card:first-child {
+  color: #fff !important;
+  background: var(--forest-primary-dark) !important;
+  border-color: transparent !important;
+}
+
+.summary-grid .summary-card:first-child :where(span, strong, small, p, h2) {
+  color: #fff !important;
+}
+
+.summary-grid .summary-card:first-child :where(span, small, p) { opacity: .75; }
+
+:where(
+  .summary-card,
+  .detail-card,
+  .permission-card,
+  .overview-card,
+  .passport-overview,
+  .side-card,
+  .balance-card,
+  .purchase-card,
+  .action-card
+) .ant-card-body {
+  color: var(--forest-text);
+  padding: 20px !important;
+}
+
+.summary-card span,
+.summary-card small,
+.summary-card p,
+.card-label,
+.meta-list dt,
+.overview-meta dt,
+.detail-card dt,
+.info-line span,
+.passport-subtitle,
+.card-heading p,
+.permission-row p,
+.permission-copy p,
+.history-copy p,
+.history-item p,
+.history-item time,
+.linked-card p,
+.purchase-title p,
+.balance-subhint,
+.package-unit,
+.package-capacity,
+.purchase-note,
+.credits-note {
+  color: var(--forest-text-secondary) !important;
+}
+
+.summary-card strong,
+.summary-card h2,
+.detail-card h3,
+.overview-card h2,
+.passport-overview h2,
+.card-heading h2,
+.side-card h2,
+.action-card h2,
+.linked-card h3,
+.meta-list dd,
+.overview-meta dd,
+.detail-card dd,
+.permission-row strong,
+.permission-copy strong,
+.info-line strong,
+.history-item strong,
+.history-copy strong,
+.purchase-title h2,
+.balance-label,
+.balance-hint,
+.payment-label,
+.payment-name,
+.payment-tail,
+.purchase-summary span,
+.amount-summary strong {
+  color: var(--forest-text) !important;
+}
+
+.agent-icon,
+.fit-score,
+.permission-header,
+.permission-title strong,
+.form-card .ant-form-item-label label {
+  color: var(--forest-text) !important;
+}
+
+.agent-code,
+.permission-code,
+.permission-body p {
+  color: var(--forest-text-secondary) !important;
+}
+
+.work-description,
+.analysis-preview,
+.permission-list li,
+.permission-row,
+.meta-list div,
+.overview-meta div,
+.info-line,
+.history-item,
+.summary-divider,
+.balance-rule {
+  border-color: var(--forest-border) !important;
+}
+
+.work-description,
+.analysis-preview,
+.permission-list li {
+  background: var(--forest-subtle) !important;
+}
+
+.work-description span,
+.analysis-preview span,
+.text-link,
+.back-link:hover,
+.passport-link:hover strong,
+.request-link:hover strong,
+.next-step-link:hover strong {
+  color: var(--forest-primary) !important;
+}
+
+.work-description p,
+.analysis-preview p {
+  color: #3e4641 !important;
+}
+
+/* Primary and secondary actions */
+.new-request-button,
+.submit-button,
+.purchase-button {
+  color: #fff !important;
+  background: var(--forest-primary) !important;
+  border-color: var(--forest-primary) !important;
+  box-shadow: none !important;
+}
+
+.new-request-button:hover,
+.submit-button:hover,
+.purchase-button:hover {
+  color: #fff !important;
+  background: var(--forest-primary-dark) !important;
+  border-color: var(--forest-primary-dark) !important;
+}
+
+.secondary-action,
+.back-button {
+  color: var(--forest-primary-dark) !important;
+  background: #fff !important;
+  border-color: #b9d0c2 !important;
+}
+
+/* Tabs, controls and tables */
+.panel-toolbar {
+  border-color: var(--forest-border) !important;
+  min-height: 66px !important;
+}
+
+.status-tab {
+  color: var(--forest-text-secondary) !important;
+}
+
+.status-tab.active {
+  color: var(--forest-primary-dark) !important;
+}
+
+.status-tab.active::after {
+  background: var(--forest-primary) !important;
+  box-shadow: none !important;
+}
+
+.tab-count,
+.permission-index,
+.count-badge {
+  color: var(--forest-text-secondary) !important;
+  background: #eeeeee !important;
+}
+
+.status-tab.active .tab-count,
+.permission-total {
+  color: var(--forest-primary-dark) !important;
+  background: var(--forest-primary-soft) !important;
+}
+
+.search-input,
+.search-input .ant-input,
+.form-card input,
+.form-card textarea,
+.form-card .ant-select-selector,
+.auth-form .ant-input-affix-wrapper,
+.auth-form .ant-select-selector {
+  color: var(--forest-text) !important;
+  background: var(--forest-subtle) !important;
+  border-color: var(--forest-border-strong) !important;
+}
+
+.search-input .ant-input::placeholder,
+.search-input .ant-input-prefix,
+.auth-form .ant-input-prefix {
+  color: var(--forest-text-muted) !important;
+}
+
+.admin-table .ant-table,
+.passport-table .ant-table,
+.request-table .ant-table,
+.admin-table .ant-table-container,
+.passport-table .ant-table-container,
+.request-table .ant-table-container,
+.admin-table .ant-table-content,
+.passport-table .ant-table-content,
+.request-table .ant-table-content {
+  background: transparent !important;
+}
+
+.admin-table .ant-table-thead > tr > th,
+.passport-table .ant-table-thead > tr > th,
+.request-table .ant-table-thead > tr > th {
+  color: var(--forest-text-secondary) !important;
+  background: var(--forest-subtle) !important;
+  border-color: var(--forest-border) !important;
+  height: 48px !important;
+}
+
+.admin-table .ant-table-tbody > tr > td,
+.passport-table .ant-table-tbody > tr > td,
+.request-table .ant-table-tbody > tr > td {
+  color: #3e4641 !important;
+  background: #fff !important;
+  border-color: var(--forest-border) !important;
+  height: 60px !important;
+}
+
+.admin-table .ant-table-tbody > tr:hover > td,
+.passport-table .ant-table-tbody > tr:hover > td,
+.request-table .ant-table-tbody > tr:hover > td {
+  background: #f3f7f4 !important;
+}
+
+.passport-id strong,
+.passport-link strong,
+.request-link strong,
+.next-step-link strong,
+.agent-name,
+.task-name,
+.permission-count,
+.created-at {
+  color: var(--forest-text) !important;
+}
+
+.passport-id span,
+.passport-link small,
+.request-link small,
+.muted {
+  color: var(--forest-text-secondary) !important;
+}
+
+/* Credits */
+.balance-value,
+.balance-value small,
+.purchase-summary strong,
+.purchase-summary strong small,
+.recommend-explain,
+.change-link {
+  color: var(--forest-primary) !important;
+}
+
+.package-option,
+.payment-method {
+  color: var(--forest-text-secondary) !important;
+  background: var(--forest-subtle) !important;
+  border-color: var(--forest-border-strong) !important;
+}
+
+.package-option:hover,
+.payment-method:hover {
+  border-color: var(--forest-primary) !important;
+}
+
+.package-option.selected {
+  background: var(--forest-primary-soft) !important;
+  border-color: var(--forest-primary) !important;
+  box-shadow: none !important;
+}
+
+.package-credits,
+.package-option strong,
+.payment-icon,
+.payment-options .ant-radio-wrapper {
+  color: var(--forest-text) !important;
+}
+
+.package-badge,
+.payment-radio span {
+  background: var(--forest-primary) !important;
+  box-shadow: none !important;
+}
+
+.payment-radio { border-color: var(--forest-primary) !important; }
+
+/* Login */
+.login-shell {
+  color: var(--forest-text) !important;
+  background: var(--forest-canvas) !important;
+}
+
+.login-header {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: var(--forest-border) !important;
+}
+
+.header-brand,
+.login-brand h1 {
+  color: var(--forest-text) !important;
+}
+
+.header-link,
+.login-brand p,
+.card-footer,
+.login-footer {
+  color: var(--forest-text-secondary) !important;
+}
+
+.header-link:hover,
+.link-button,
+.link-button:hover {
+  color: var(--forest-primary) !important;
+}
+
+.login-card {
+  background: #fff !important;
+  border-color: var(--forest-border) !important;
+  box-shadow: 0 10px 30px rgba(25, 25, 25, 0.06) !important;
+}
+
+.login-tabs .ant-tabs-ink-bar {
+  background: var(--forest-primary) !important;
+  box-shadow: none !important;
+}
+
+.card-footer {
+  background: var(--forest-subtle) !important;
+  border-color: var(--forest-border) !important;
+}
+
+.oauth-alert {
+  color: var(--forest-primary-dark) !important;
+  background: var(--forest-primary-soft) !important;
+  border-color: #d8d4ff !important;
+}
+
+.oauth-alert .ant-alert-message,
+.oauth-alert .ant-alert-icon {
+  color: var(--forest-primary-dark) !important;
+}
+
+.form-alert.ant-alert-success {
+  background: #edf7f1 !important;
+  border-color: #c8e1d3 !important;
+}
+
+.form-alert.ant-alert-error {
+  background: #fff2f1 !important;
+  border-color: #f0cac7 !important;
+}
+
+/* Semantic states */
+.status-active,
+.analysis-done,
+.passport-active,
+.allowed-state,
+.allowed {
+  color: #126b48 !important;
+  background: #e4f2ea !important;
+  border-color: #b9d9c8 !important;
+}
+
+.status-pending,
+.analysis-progress,
+.passport-pending {
+  color: #80510c !important;
+  background: #fff5dc !important;
+  border-color: #efdba9 !important;
+}
+
+.status-rejected,
+.analysis-failed,
+.passport-rejected,
+.blocked-state,
+.blocked {
+  color: #b33a3a !important;
+  background: #fceded !important;
+  border-color: #edc8c8 !important;
+}
+
+.status-expired,
+.status-none,
+.passport-none {
+  color: #66706a !important;
+  background: #eef1ef !important;
+  border-color: #d8deda !important;
+}
+
+.load-alert {
+  color: #a52f2f !important;
+  background: #fff2f1 !important;
+  border-color: #f0cac7 !important;
+}
+
+.load-alert .ant-alert-message,
+.load-alert .ant-alert-icon,
+.load-alert .ant-btn-link,
+.reject-reason {
+  color: #b33a3a !important;
+}
+
+@media (max-height: 760px) and (min-width: 992px) {
+  .page-heading,
+  .detail-heading { margin-bottom: 14px !important; }
+
+  .page-heading h1,
+  .detail-heading h1,
+  .content-page > h1,
+  .content-page h1 { font-size: 27px !important; }
+
+  .description { margin-top: 6px !important; font-size: 11px !important; }
+  .summary-grid { gap: 10px !important; margin-bottom: 12px !important; }
+  .summary-card { min-height: 84px !important; }
+  .summary-card .ant-card-body { min-height: 84px !important; padding: 13px 18px !important; }
+  .summary-card strong { font-size: 24px !important; }
+  .panel-toolbar { min-height: 54px !important; padding-top: 9px !important; }
+
+  .admin-table .ant-table-thead > tr > th,
+  .passport-table .ant-table-thead > tr > th,
+  .request-table .ant-table-thead > tr > th { height: 40px !important; padding-top: 8px !important; padding-bottom: 8px !important; }
+
+  .admin-table .ant-table-tbody > tr > td,
+  .passport-table .ant-table-tbody > tr > td,
+  .request-table .ant-table-tbody > tr > td { height: 46px !important; padding-top: 7px !important; padding-bottom: 7px !important; }
+
+  .panel-footer { min-height: 42px !important; }
+  .content-page > .eyebrow { margin-bottom: 4px !important; }
+  .content-page > .description { margin-bottom: 14px !important; }
+  .form-card .ant-card-body { padding: 14px 18px !important; }
+  .form-card .ant-form-item { margin-bottom: 9px !important; }
+  .form-card .ant-form-item-label { padding-bottom: 3px !important; }
+  .form-card .ant-form-item-label label { height: auto !important; font-size: 12px !important; }
+  .form-card textarea { height: 78px !important; min-height: 78px !important; }
+  .form-card .hint { margin-top: 3px !important; font-size: 10px !important; }
+  .form-card .ant-input-lg,
+  .form-card .ant-select-lg .ant-select-selector { min-height: 36px !important; height: 36px !important; }
+  .form-card .ant-radio-button-wrapper { height: 32px !important; line-height: 30px !important; font-size: 11px !important; }
+
+  .back-button,
+  .back-link { margin-bottom: 10px !important; }
+  .steps-card { margin-bottom: 10px !important; }
+  .steps-card .ant-card-body,
+  .detail-card .ant-card-body,
+  .overview-card .ant-card-body,
+  .permission-card .ant-card-body,
+  .side-card .ant-card-body { padding: 14px 16px !important; }
+  .steps-head { margin-bottom: 10px !important; }
+  .detail-grid { margin-bottom: 12px !important; }
+  .request-detail-card { margin-bottom: 12px !important; }
+  .detail-card h3,
+  .info-card h2 { margin-bottom: 9px !important; }
+  .detail-card dl,
+  .meta-list,
+  .info-list { gap: 7px !important; }
+  .analysis-preview,
+  .work-description { margin-top: 10px !important; padding-top: 10px !important; }
+  .permission-row { padding-top: 8px !important; padding-bottom: 8px !important; }
+  .detail-main,
+  .action-side { gap: 10px !important; }
+  .detail-grid,
+  .analysis-grid,
+  .content-grid { gap: 14px !important; }
+}

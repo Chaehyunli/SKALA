@@ -1,0 +1,231 @@
+# Common Agent 권한 파일
+
+agent: COMMON_AGENT
+name: Common Agent
+task: 문서·메일·메신저 등 사내 기본 업무
+selectable: true
+description: >
+  특정 도메인에 속하지 않는 사내 기본 도구를 다룬다. 사내 문서 조회와
+  요약, 문서 초안 작성, 메일 확인과 초안 작성, 사내 메신저 확인과 공지
+  전달, 구성원 소속 조회를 수행한다. 다른 에이전트의 업무 결과를 문서나
+  메일 형태로 정리하는 단계에서 함께 선택된다.
+typicalTasks:
+  - 회의록·보고서 요약
+  - 규정 문서에서 특정 조항 확인
+  - 기존 양식을 참고한 문서 초안 작성
+  - 메일 초안 작성
+  - 사내 채널 공지 전달
+  - 담당자 소속·연락처 확인
+
+groups:
+
+  DOCUMENT:
+    displayName: 문서
+    description: 사내 문서 저장소의 조회, 작성, 공유에 관한 권한
+    permissions:
+
+      DOCUMENT_READ:
+        label: 사내 문서 조회
+        description: >
+          사내 문서 저장소의 문서 본문과 메타데이터를 읽는다.
+          문서를 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      DOCUMENT_DRAFT_CREATE:
+        label: 문서 초안 작성
+        description: >
+          새 문서를 초안 상태로 생성한다. 기존 문서를 덮어쓰지 않으며
+          공유 범위는 작성자 본인으로 제한된다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      DOCUMENT_UPDATE:
+        label: 사내 문서 수정
+        description: >
+          기존 문서의 본문을 변경한다. 변경 이력이 남지만 이전 버전을
+          자동으로 복원하지는 않는다.
+        risk: HIGH
+        reversible: false
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 8
+
+      DOCUMENT_DELETE:
+        label: 사내 문서 삭제
+        description: >
+          문서를 저장소에서 삭제한다. 복구가 보장되지 않으므로
+          업무에 삭제가 명시적으로 요구된 경우에만 필요로 판단한다.
+        risk: CRITICAL
+        reversible: false
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 2
+
+      DOCUMENT_SHARE_EXTERNAL:
+        label: 문서 외부 공유
+        description: >
+          사내 문서를 외부 사용자에게 열람 가능하도록 공유 링크를 생성한다.
+          공유된 문서는 회수 전까지 사외에서 접근 가능하다.
+        risk: CRITICAL
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 2
+
+  STORAGE:
+    displayName: 파일 저장소
+    description: 사내 파일 저장소의 조회와 반출에 관한 권한
+    permissions:
+
+      STORAGE_FILE_READ:
+        label: 저장소 파일 조회
+        description: >
+          사내 파일 저장소의 파일 목록과 내용을 읽는다.
+          파일을 변경하거나 외부로 내보내지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      STORAGE_FILE_EXPORT:
+        label: 저장소 파일 반출
+        description: >
+          사내 파일을 외부로 내려받거나 사외 위치로 복사한다.
+          반출된 파일은 통제 범위를 벗어난다.
+        risk: CRITICAL
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 2
+
+  TEMPLATE:
+    displayName: 문서 양식
+    description: 사내 표준 문서 양식 조회에 관한 권한
+    permissions:
+
+      TEMPLATE_READ:
+        label: 문서 양식 조회
+        description: >
+          사내 표준 보고서·계약서 양식을 읽는다.
+          양식을 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+  MAIL:
+    displayName: 이메일
+    description: 사내외 이메일의 조회, 작성, 발송에 관한 권한
+    permissions:
+
+      MAIL_READ:
+        label: 이메일 조회
+        description: >
+          본인 메일함의 제목, 본문, 첨부 목록을 읽는다.
+          메일을 변경하거나 발송하지 않는다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 24
+
+      MAIL_DRAFT_CREATE:
+        label: 이메일 초안 작성
+        description: >
+          이메일 본문과 수신자를 구성해 초안 상태로만 저장한다.
+          실제 발송은 일어나지 않으며 사람이 검토 후 직접 보내야 한다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      MAIL_SEND:
+        label: 이메일 직접 발송
+        description: >
+          사람의 검토 없이 외부 수신자에게 메일을 즉시 발송한다.
+          발송된 메일은 회수할 수 없다. 업무에 발송이 명시적으로
+          요구된 경우에만 필요로 판단한다.
+        risk: HIGH
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 4
+
+      MAIL_DELETE:
+        label: 이메일 삭제
+        description: >
+          메일함의 메일을 삭제한다. 복구가 보장되지 않으므로
+          업무에 삭제가 명시적으로 요구된 경우에만 필요로 판단한다.
+        risk: CRITICAL
+        reversible: false
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 2
+
+  MESSENGER:
+    displayName: 사내 메신저
+    description: 사내 메신저 채널의 조회와 메시지 전송에 관한 권한
+    permissions:
+
+      MESSENGER_READ:
+        label: 메신저 대화 조회
+        description: >
+          참여 중인 채널의 메시지와 스레드를 읽는다.
+          메시지를 전송하거나 변경하지 않는다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 24
+
+      MESSENGER_SEND:
+        label: 메신저 메시지 전송
+        description: >
+          사내 채널에 메시지를 즉시 전송한다. 전송된 메시지는
+          채널 참여자 전원에게 노출된다.
+        risk: HIGH
+        reversible: false
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 4
+
+  DIRECTORY:
+    displayName: 구성원 정보
+    description: 사내 구성원 조직 정보 조회에 관한 권한
+    permissions:
+
+      DIRECTORY_READ:
+        label: 구성원 정보 조회
+        description: >
+          사내 구성원의 이름, 소속 부서, 직위, 사내 연락처를 읽는다.
+          급여나 평가 등 민감 인사 정보는 포함하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 24

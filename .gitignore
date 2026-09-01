@@ -4,5 +4,18 @@
 **/.agents/
 **/.claude/
 
+# 의존성/빌드 산출물 (재현 가능, git 추적 제외)
+node_modules/
+venv/
+sllm/
+build/
+__pycache__/
+
+# 대용량 모델/아카이브 산출물
+models/
+*.safetensors
+*.pt
+*.tar
+
 # 주피터 노트북 실행 결과 무시하기
 *.ipynb filter=dropoutput_filter

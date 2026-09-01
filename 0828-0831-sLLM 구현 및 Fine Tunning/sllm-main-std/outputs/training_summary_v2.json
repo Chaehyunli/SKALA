@@ -1,0 +1,15 @@
+{
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "mps",
+  "training_mode": "FP32 LoRA Apple MPS",
+  "epochs": 5.0,
+  "max_length": 512,
+  "learning_rate": 0.0001,
+  "gradient_accumulation_steps": 8,
+  "lora_rank": 32,
+  "lora_alpha": 64,
+  "final_train_loss": 0.207847,
+  "global_step": 365,
+  "best_metric": 0.002157337497919798,
+  "best_model_checkpoint": "/Users/limchaehyeon/Desktop/강의 자료/0828-0831/sllm-main-std/models/hr-qwen-lora/checkpoint-365"
+}

@@ -1,0 +1,114 @@
+# Customer Support Agent 권한 파일
+
+agent: CUSTOMER_SUPPORT
+name: Customer Support Agent
+task: 문의 분석·답변 초안
+selectable: true
+description: >
+  접수된 고객 문의를 읽고 유형과 긴급도를 분류한 뒤 답변 초안을 작성한다.
+  작성된 초안은 상담원이 검토한 후 발송한다.
+typicalTasks:
+  - 미처리 문의 유형별 분류
+  - 반복 문의에 대한 답변 초안 작성
+  - 문의 내용 요약
+  - 에스컬레이션 대상 문의 선별
+
+groups:
+
+  SUPPORT:
+    displayName: 고객지원
+    description: 고객 문의 조회, 답변 작성, 상태 변경에 관한 권한
+    permissions:
+
+      SUPPORT_TICKET_READ:
+        label: 고객 문의 조회
+        description: >
+          접수된 고객 문의의 본문, 상태, 담당자, 처리 이력을 읽는다.
+          문의 상태를 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 24
+
+      SUPPORT_REPLY_DRAFT:
+        label: 문의 답변 초안 작성
+        description: >
+          고객 문의에 대한 답변을 초안 상태로 작성한다.
+          고객에게 전송되지 않으며 상담원이 검토 후 직접 보낸다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: true
+        recommendedTtlHours: 24
+
+      SUPPORT_TICKET_UPDATE:
+        label: 문의 상태 변경
+        description: >
+          문의의 처리 상태, 담당자, 우선순위를 변경한다.
+          고객에게 상태 변경 알림이 전달될 수 있다.
+        risk: HIGH
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 8
+
+      SUPPORT_REPLY_SEND:
+        label: 문의 답변 직접 발송
+        description: >
+          상담원 검토 없이 고객에게 답변을 즉시 전송한다.
+          전송된 답변은 회수할 수 없다.
+        risk: CRITICAL
+        reversible: false
+        externalImpact: true
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 2
+
+  CUSTOMER:
+    displayName: 고객
+    description: 문의 응대에 필요한 고객 정보 조회 권한
+    permissions:
+
+      CUSTOMER_READ:
+        label: CRM 고객정보 조회
+        description: >
+          문의자의 계약 상태와 최근 활동 이력을 읽는다.
+          고객 데이터를 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: true
+        recommendedTtlHours: 24
+
+  KNOWLEDGE:
+    displayName: 지식베이스
+    description: 응대용 지식베이스 조회와 등록에 관한 권한
+    permissions:
+
+      KNOWLEDGE_READ:
+        label: 지식베이스 조회
+        description: >
+          응대 가이드와 FAQ 문서를 읽는다. 문서를 변경하지 않는다.
+        risk: LOW
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: false
+        containsPersonalData: false
+        recommendedTtlHours: 24
+
+      KNOWLEDGE_ARTICLE_CREATE:
+        label: 지식베이스 문서 작성
+        description: >
+          새 응대 가이드를 초안 상태로 등록한다.
+          검토 승인 전까지 상담원에게 노출되지 않는다.
+        risk: MEDIUM
+        reversible: true
+        externalImpact: false
+        humanReviewRequired: true
+        containsPersonalData: false
+        recommendedTtlHours: 24
