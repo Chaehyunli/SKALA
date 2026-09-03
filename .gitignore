@@ -17,5 +17,9 @@ models/
 *.pt
 *.tar
 
+# 대용량 데이터셋 (직접 다운로드)
+*.pkl
+0901-0903-머신러닝 및 딥러닝 이해/04-DeepLearning/data/AirQualityUCI.csv
+
 # 주피터 노트북 실행 결과 무시하기
 *.ipynb filter=dropoutput_filter
