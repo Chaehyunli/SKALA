@@ -1,0 +1,4 @@
+_type: prompt
+input_variables:
+  - country
+template: "{country}의 수도는 어디인가요? 도시 이름만 답변해주세요."

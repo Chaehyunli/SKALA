@@ -1,0 +1,4 @@
+_type: prompt
+input_variables:
+  - fruit
+template: "{fruit}의 대표적인 색상은 무엇인가요? 한 단어로만 답변해주세요."
